@@ -10,6 +10,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * A Recipe is a specific reference to a way to cook a meal.
+ * It can be an external URL or a book reference.
+ */
 #[ORM\Entity(repositoryClass: RecipeRepository::class)]
 class Recipe
 {
@@ -43,8 +47,12 @@ class Recipe
     private Collection $ingredients;
 
     #[ORM\ManyToOne(targetEntity: Dish::class, inversedBy: 'recipes')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Dish $dish = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'recipes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     public function __construct()
     {
@@ -216,6 +224,25 @@ class Recipe
     public function setDish(?Dish $dish): self
     {
         $this->dish = $dish;
+
+        return $this;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User|null $user
+     * @return $this
+     */
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
