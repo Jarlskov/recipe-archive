@@ -36,10 +36,17 @@ class Recipe
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'recipes')]
     private Collection $tags;
 
+    /**
+     * @var Collection<int, Ingredient>
+     */
+    #[ORM\ManyToMany(targetEntity: Ingredient::class, inversedBy: 'recipes')]
+    private Collection $ingredients;
+
     public function __construct()
     {
         $this->createdAt = new DateTimeImmutable();
         $this->tags = new ArrayCollection();
+        $this->ingredients = new ArrayCollection();
     }
 
     /**
@@ -154,6 +161,38 @@ class Recipe
     public function removeTag(Tag $tag): self
     {
         $this->tags->removeElement($tag);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Ingredient>
+     */
+    public function getIngredients(): Collection
+    {
+        return $this->ingredients;
+    }
+
+    /**
+     * @param Ingredient $ingredient
+     * @return $this
+     */
+    public function addIngredient(Ingredient $ingredient): self
+    {
+        if (!$this->ingredients->contains($ingredient)) {
+            $this->ingredients->add($ingredient);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Ingredient $ingredient
+     * @return $this
+     */
+    public function removeIngredient(Ingredient $ingredient): self
+    {
+        $this->ingredients->removeElement($ingredient);
 
         return $this;
     }
