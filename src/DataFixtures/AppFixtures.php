@@ -71,9 +71,15 @@ class AppFixtures extends Fixture
                 $recipe = new Recipe();
                 $recipe->setTitle($faker->sentence(4));
                 $recipe->setAuthor($faker->name());
-                $recipe->setReference($faker->url());
                 $recipe->setUser($user);
                 $recipe->setDish($dish);
+
+                // Mix between URLs and Book References
+                if ($faker->boolean(60)) {
+                    $recipe->setReference($faker->url());
+                } else {
+                    $recipe->setReference('Book: ' . $faker->catchPhrase() . ', Page ' . $faker->numberBetween(1, 300));
+                }
 
                 // Add random tags
                 for ($k = 0; $k < rand(1, 3); $k++) {
