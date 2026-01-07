@@ -56,29 +56,6 @@
                                 {{ dish.recipes|length }} {{ dish.recipes|length == 1 ? 'recipe' : 'recipes' }}
                             </p>
                             
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                {# Extract unique tags from recipes in this dish #}
-                                {% set dish_tags = [] %}
-                                {% for recipe in dish.recipes %}
-                                    {% for tag in recipe.tags %}
-                                        {% if tag.name not in dish_tags %}
-                                            {% set dish_tags = dish_tags|merge([tag.name]) %}
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endfor %}
-                                
-                                {% for tag in dish_tags|slice(0, 3) %}
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
-                                        {{ tag }}
-                                    </span>
-                                {% endfor %}
-                                {% if dish_tags|length > 3 %}
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                        +{{ dish_tags|length - 3 }}
-                                    </span>
-                                {% endif %}
-                            </div>
-                            
                             <div class="pt-4 border-t border-gray-50 flex justify-between items-center">
                                 <span class="text-xs text-gray-400 italic">Created {{ dish.createdAt|date('M d, Y') }}</span>
                                 <a href="#" class="text-sm font-semibold text-indigo-600 hover:text-indigo-500">View Recipes &rarr;</a>
