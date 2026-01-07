@@ -17,9 +17,9 @@
                     <h1 class="text-xl font-bold text-gray-900 truncate">{{ dish.name }}</h1>
                 </div>
                 <div>
-                     <button type="button" class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                     <a href="{{ path('app_dish_edit', {'id': dish.id}) }}" class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
                         Edit Dish
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

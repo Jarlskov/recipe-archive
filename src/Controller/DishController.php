@@ -68,4 +68,55 @@ class DishController extends AbstractController
             'dish' => $dish,
         ]);
     }
+
+    /**
+     * Renders a form to edit an existing Dish and handles the submission.
+     *
+     * @param Request $request
+     * @param Dish $dish
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    #[Route('/{id}/edit', name: 'app_dish_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('DISH_EDIT', subject: 'dish')]
+    public function edit(Request $request, Dish $dish, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(DishType::class, $dish);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Dish updated successfully!');
+
+            return $this->redirectToRoute('app_dish_show', ['id' => $dish->getId()]);
+        }
+
+        return $this->render('dish/edit.html.twig', [
+            'dish' => $dish,
+            'form' => $form,
+        ]);
+    }
+
+    /**
+     * Deletes a Dish and all its recipes (via orphanRemoval).
+     *
+     * @param Request $request
+     * @param Dish $dish
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    #[Route('/{id}', name: 'app_dish_delete', methods: ['POST'])]
+    #[IsGranted('DISH_DELETE', subject: 'dish')]
+    public function delete(Request $request, Dish $dish, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$dish->getId(), (string) $request->request->get('_token'))) {
+            $entityManager->remove($dish);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Dish deleted successfully!');
+        }
+
+        return $this->redirectToRoute('app_dashboard');
+    }
 }
