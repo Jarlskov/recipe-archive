@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard - Recipe Archive{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 flex items-center">
+                    <span class="text-xl font-bold text-indigo-600 tracking-tight">Recipe Archive</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-500">{{ app.user.userIdentifier }}</span>
+                    <a href="{{ path('app_logout') }}" class="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors">
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Welcome back!</h2>
+                <p class="text-gray-600">This is your recipe archive dashboard. Soon you will see your dishes here.</p>
+                
+                <div class="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    <div class="p-6 bg-indigo-50 rounded-lg border border-indigo-100">
+                        <h3 class="font-semibold text-indigo-900">Your Dishes</h3>
+                        <p class="text-3xl font-bold text-indigo-600 mt-2">0</p>
+                    </div>
+                    <div class="p-6 bg-green-50 rounded-lg border border-green-100">
+                        <h3 class="font-semibold text-green-900">Your Recipes</h3>
+                        <p class="text-3xl font-bold text-green-600 mt-2">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
