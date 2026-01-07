@@ -120,13 +120,16 @@ abstract class AbstractCreatableEntityAutocompleteField extends AbstractType
 
         if ($this->canCreate()) {
             $repository = $this->entityManager->getRepository($this->getEntityClass());
-            $entity = $repository->findOneBy(['name' => $value]);
             
-            if (!$entity) {
-                $entity = $this->createEntity((string) $value);
+            // PHP-side case-insensitive check for UTF-8 compatibility in SQLite
+            $entities = $repository->findAll();
+            foreach ($entities as $existing) {
+                if (mb_strtolower((string)$existing->getName()) === mb_strtolower((string)$value)) {
+                    return $existing;
+                }
             }
             
-            return $entity;
+            return $this->createEntity((string) $value);
         }
 
         return null;
@@ -173,7 +176,6 @@ abstract class AbstractCreatableEntityAutocompleteField extends AbstractType
             'maxItems' => $options['multiple'] ? null : 1,
         ];
 
-        // Use JSON_UNESCAPED_UNICODE to ensure Danish characters are readable in HTML attributes
         $view->vars['attr']['data-symfony--ux-autocomplete--autocomplete-tom-select-options-value'] = json_encode($tomSelectOptions, JSON_UNESCAPED_UNICODE);
     }
 
@@ -207,17 +209,33 @@ abstract class AbstractCreatableEntityAutocompleteField extends AbstractType
             'choice_label' => 'name',
             'multiple' => true,
             'security' => 'ROLE_USER',
-            'searchable_fields' => ['name'],
             'allow_extra_fields' => true,
+            'searchable_fields' => ['name'],
             'filter_query' => function (QueryBuilder $qb, string $query, EntityRepository $repository): void {
                 if (!$query) {
                     return;
                 }
-                // SQLite LIKE is case-sensitive for non-ASCII. LOWER() is a best-effort fix.
-                $qb->andWhere('LOWER(entity.name) LIKE LOWER(:query)')
-                   ->setParameter('query', '%'.$query.'%');
+
+                // SQLite fallback for UTF-8 case-insensitive search
+                // We fetch all records and filter in PHP because SQLite LIKE is case-sensitive for non-ASCII.
+                $entities = $repository->findAll();
+                $ids = [];
+                foreach ($entities as $entity) {
+                    if (mb_stripos((string)$entity->getName(), $query) !== false) {
+                        $ids[] = $entity->getId();
+                    }
+                }
+
+                if (empty($ids)) {
+                    $qb->andWhere('1 = 0');
+                } else {
+                    $qb->andWhere('entity.id IN (:ids)')
+                       ->setParameter('ids', $ids);
+                }
             },
         ]);
+
+        $resolver->setDefined(['extra_options', 'tom_select_options']);
     }
 
     /**
