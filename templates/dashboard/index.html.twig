@@ -49,19 +49,21 @@
         {% if dishes|length > 0 %}
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {% for dish in dishes %}
-                    <div class="bg-white overflow-hidden shadow-sm rounded-xl border border-gray-100 hover:shadow-md transition-shadow">
+                    <a href="{{ path('app_dish_show', {'id': dish.id}) }}" class="block bg-white overflow-hidden shadow-sm rounded-xl border border-gray-100 hover:shadow-md hover:border-indigo-200 transition-all group">
                         <div class="p-6">
-                            <h3 class="text-lg font-bold text-gray-900 mb-1">{{ dish.name }}</h3>
+                            <h3 class="text-lg font-bold text-gray-900 mb-1 group-hover:text-indigo-600 transition-colors">{{ dish.name }}</h3>
                             <p class="text-sm text-gray-500 mb-4">
                                 {{ dish.recipes|length }} {{ dish.recipes|length == 1 ? 'recipe' : 'recipes' }}
                             </p>
                             
                             <div class="pt-4 border-t border-gray-50 flex justify-between items-center">
                                 <span class="text-xs text-gray-400 italic">Created {{ dish.createdAt|date('M d, Y') }}</span>
-                                <a href="#" class="text-sm font-semibold text-indigo-600 hover:text-indigo-500">View Recipes &rarr;</a>
+                                <span class="text-sm font-semibold text-indigo-600 group-hover:translate-x-1 transition-transform inline-flex items-center">
+                                    View Recipes &rarr;
+                                </span>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 {% endfor %}
             </div>
         {% else %}
