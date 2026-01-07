@@ -41,9 +41,9 @@
         <!-- Dishes Grid -->
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-gray-900">Your Dishes</h2>
-            <button class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <a href="{{ path('app_dish_new') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Add Dish
-            </button>
+            </a>
         </div>
 
         {% if dishes|length > 0 %}
@@ -74,9 +74,9 @@
                 <h3 class="mt-2 text-sm font-medium text-gray-900">No dishes</h3>
                 <p class="mt-1 text-sm text-gray-500">Get started by creating your first dish.</p>
                 <div class="mt-6">
-                    <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <a href="{{ path('app_dish_new') }}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         Add Dish
-                    </button>
+                    </a>
                 </div>
             </div>
         {% endif %}
