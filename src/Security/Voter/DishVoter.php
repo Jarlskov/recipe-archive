@@ -17,6 +17,7 @@ final class DishVoter extends Voter
 {
     public const EDIT = 'DISH_EDIT';
     public const VIEW = 'DISH_VIEW';
+    public const DELETE = 'DISH_DELETE';
 
     /**
      * @param string $attribute
@@ -25,7 +26,7 @@ final class DishVoter extends Voter
      */
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return in_array($attribute, [self::EDIT, self::VIEW])
+        return in_array($attribute, [self::EDIT, self::VIEW, self::DELETE])
             && $subject instanceof Dish;
     }
 
@@ -49,7 +50,7 @@ final class DishVoter extends Voter
         $dish = $subject;
 
         return match ($attribute) {
-            self::EDIT, self::VIEW => $this->canAccess($dish, $user),
+            self::EDIT, self::VIEW, self::DELETE => $this->canAccess($dish, $user),
             default => false,
         };
     }
