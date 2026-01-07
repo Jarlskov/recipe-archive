@@ -1,0 +1,26 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
+/**
+ * Controller used to manage the user dashboard.
+ */
+class DashboardController extends AbstractController
+{
+    /**
+     * @return Response
+     */
+    #[Route('/', name: 'app_dashboard')]
+    #[IsGranted('ROLE_USER')]
+    public function index(): Response
+    {
+        return $this->render('dashboard/index.html.twig');
+    }
+}
