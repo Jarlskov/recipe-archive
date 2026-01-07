@@ -10,6 +10,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * A Dish represents a specific type of meal (e.g., "Spaghetti Carbonara")
+ * which acts as a container for one or more specific Recipes.
+ */
 #[ORM\Entity(repositoryClass: DishRepository::class)]
 class Dish
 {
@@ -29,6 +33,10 @@ class Dish
      */
     #[ORM\OneToMany(targetEntity: Recipe::class, mappedBy: 'dish', orphanRemoval: true)]
     private Collection $recipes;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'dishes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     public function __construct()
     {
@@ -113,10 +121,28 @@ class Dish
         if ($this->recipes->removeElement($recipe)) {
             // set the owning side to null (unless already changed)
             if ($recipe->getDish() === $this) {
-                // Since it's non-nullable, this might need handling if we want to allow orphans,
-                // but orphanRemoval: true takes care of deletion.
+                $recipe->setDish(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User|null $user
+     * @return $this
+     */
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
