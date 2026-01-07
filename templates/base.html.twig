@@ -2,8 +2,8 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        <title>{% block title %}Recipe Archive{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🍳</text></svg>">
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
         {% endblock %}
@@ -12,33 +12,73 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body class="bg-gray-50 text-gray-900 font-sans antialiased">
-        {% for label, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-                    <div class="rounded-md p-4 {{ label == 'success' ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200' }}">
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                {% if label == 'success' %}
-                                    <svg class="h-5 w-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                {% else %}
-                                    <svg class="h-5 w-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                {% endif %}
+    <body class="bg-gray-50 text-gray-900 font-sans antialiased flex flex-col min-h-screen">
+        {% if app.user %}
+            <nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-30">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between h-16 items-center">
+                        <div class="flex items-center space-x-8">
+                            <a href="{{ path('app_dashboard') }}" class="flex-shrink-0 flex items-center group">
+                                <span class="text-xl font-bold text-indigo-600 tracking-tight group-hover:text-indigo-500 transition-colors">Recipe Archive</span>
+                            </a>
+                            <div class="hidden sm:flex items-center space-x-4">
+                                <a href="{{ path('app_dish_new') }}" class="text-sm font-medium text-gray-500 hover:text-indigo-600 transition-colors">New Dish</a>
+                                <a href="{{ path('app_recipe_new') }}" class="text-sm font-medium text-gray-500 hover:text-indigo-600 transition-colors">New Recipe</a>
                             </div>
-                            <div class="ml-3">
-                                <p class="text-sm font-medium {{ label == 'success' ? 'text-green-800' : 'text-red-800' }}">
-                                    {{ message }}
-                                </p>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="hidden md:flex flex-col text-right">
+                                <div class="text-sm font-medium text-gray-900 leading-none mb-1">{{ app.user.userIdentifier }}</div>
+                                <div class="text-xs text-gray-500 leading-none">Member</div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <a href="{{ path('app_logout') }}" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                                    Logout
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
+            </nav>
+        {% endif %}
+
+        <main class="flex-grow">
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+                        <div class="rounded-md p-4 {{ label == 'success' ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200' }}">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    {% if label == 'success' %}
+                                        <svg class="h-5 w-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    {% else %}
+                                        <svg class="h-5 w-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    {% endif %}
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium {{ label == 'success' ? 'text-green-800' : 'text-red-800' }}">
+                                        {{ message }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
-        {% block body %}{% endblock %}
+
+            {% block body %}{% endblock %}
+        </main>
+
+        <footer class="bg-white border-t border-gray-200 py-6 mt-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <p class="text-center text-gray-400 text-sm">
+                    &copy; {{ "now"|date("Y") }} Recipe Archive. Mobile friendly indexing for your favorite meals.
+                </p>
+            </div>
+        </footer>
     </body>
 </html>

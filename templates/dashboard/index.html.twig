@@ -3,29 +3,7 @@
 {% block title %}Dashboard - Recipe Archive{% endblock %}
 
 {% block body %}
-<div class="min-h-screen bg-gray-50">
-    <!-- Header -->
-    <nav class="bg-white shadow-sm border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex-shrink-0 flex items-center">
-                    <span class="text-xl font-bold text-indigo-600 tracking-tight">Recipe Archive</span>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <div class="hidden sm:block text-right">
-                        <div class="text-sm font-medium text-gray-900">{{ app.user.userIdentifier }}</div>
-                        <div class="text-xs text-gray-500">Member</div>
-                    </div>
-                    <a href="{{ path('app_logout') }}" class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
-                        Logout
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <!-- Stats Row -->
         <div class="grid grid-cols-2 gap-4 sm:gap-6 mb-8">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
@@ -42,10 +20,10 @@
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
             <h2 class="text-2xl font-bold text-gray-900">Your Dishes</h2>
             <div class="flex space-x-3 w-full sm:w-auto">
-                <a href="{{ path('app_recipe_new') }}" class="flex-1 sm:flex-none inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <a href="{{ path('app_recipe_new') }}" class="flex-1 sm:flex-none inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
                     Add Recipe
                 </a>
-                <a href="{{ path('app_dish_new') }}" class="flex-1 sm:flex-none inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <a href="{{ path('app_dish_new') }}" class="flex-1 sm:flex-none inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
                     Add Dish
                 </a>
             </div>
@@ -128,6 +106,5 @@
                 </div>
             </div>
         {% endif %}
-    </main>
-</div>
+    </div>
 {% endblock %}
