@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Dish;
 use App\Entity\Recipe;
 use App\Entity\User;
 use App\Form\RecipeType;
@@ -25,7 +24,6 @@ class RecipeController extends AbstractController
 {
     /**
      * Renders a form to create a new Recipe and handles the submission.
-     * Optionally pre-selects a Dish if 'dish_id' is provided.
      *
      * @param Request $request
      * @param EntityManagerInterface $entityManager
@@ -37,11 +35,9 @@ class RecipeController extends AbstractController
     {
         $recipe = new Recipe();
         
-        // Check for pre-selected dish
         $dishId = $request->query->get('dish_id');
         if ($dishId) {
             $dish = $dishRepository->find($dishId);
-            // Verify ownership
             if ($dish && $dish->getUser() === $this->getUser()) {
                 $recipe->setDish($dish);
             }
@@ -55,10 +51,9 @@ class RecipeController extends AbstractController
             $user = $this->getUser();
             $recipe->setUser($user);
 
-            // If the user selected a dish in the form, ensure they own it
-            // (Though the UI should filter it, backend validation is key)
+            // Backend validation: Ensure the assigned dish belongs to the user
             if ($recipe->getDish() && $recipe->getDish()->getUser() !== $user) {
-                $this->addFlash('error', 'You cannot assign a recipe to a dish you do not own.');
+                $this->addFlash('error', 'Invalid dish selection.');
                 return $this->render('recipe/new.html.twig', [
                     'recipe' => $recipe,
                     'form' => $form,
@@ -81,5 +76,75 @@ class RecipeController extends AbstractController
             'recipe' => $recipe,
             'form' => $form,
         ]);
+    }
+
+    /**
+     * Renders a form to edit an existing Recipe and handles the submission.
+     *
+     * @param Request $request
+     * @param Recipe $recipe
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    #[Route('/{id}/edit', name: 'app_recipe_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('RECIPE_EDIT', subject: 'recipe')]
+    public function edit(Request $request, Recipe $recipe, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(RecipeType::class, $recipe);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Backend validation: Ensure the assigned dish belongs to the user
+            if ($recipe->getDish() && $recipe->getDish()->getUser() !== $this->getUser()) {
+                $this->addFlash('error', 'Invalid dish selection.');
+                return $this->render('recipe/edit.html.twig', [
+                    'recipe' => $recipe,
+                    'form' => $form,
+                ]);
+            }
+
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Recipe updated successfully!');
+
+            if ($recipe->getDish()) {
+                return $this->redirectToRoute('app_dish_show', ['id' => $recipe->getDish()->getId()]);
+            }
+
+            return $this->redirectToRoute('app_dashboard');
+        }
+
+        return $this->render('recipe/edit.html.twig', [
+            'recipe' => $recipe,
+            'form' => $form,
+        ]);
+    }
+
+    /**
+     * Deletes a Recipe.
+     *
+     * @param Request $request
+     * @param Recipe $recipe
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    #[Route('/{id}', name: 'app_recipe_delete', methods: ['POST'])]
+    #[IsGranted('RECIPE_DELETE', subject: 'recipe')]
+    public function delete(Request $request, Recipe $recipe, EntityManagerInterface $entityManager): Response
+    {
+        $dishId = $recipe->getDish()?->getId();
+
+        if ($this->isCsrfTokenValid('delete'.$recipe->getId(), (string) $request->request->get('_token'))) {
+            $entityManager->remove($recipe);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Recipe deleted successfully!');
+        }
+
+        if ($dishId) {
+            return $this->redirectToRoute('app_dish_show', ['id' => $dishId]);
+        }
+
+        return $this->redirectToRoute('app_dashboard');
     }
 }
