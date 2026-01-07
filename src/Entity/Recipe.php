@@ -37,13 +37,13 @@ class Recipe
     /**
      * @var Collection<int, Tag>
      */
-    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'recipes')]
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'recipes', cascade: ['persist'])]
     private Collection $tags;
 
     /**
      * @var Collection<int, Ingredient>
      */
-    #[ORM\ManyToMany(targetEntity: Ingredient::class, inversedBy: 'recipes')]
+    #[ORM\ManyToMany(targetEntity: Ingredient::class, inversedBy: 'recipes', cascade: ['persist'])]
     private Collection $ingredients;
 
     #[ORM\ManyToOne(targetEntity: Dish::class, inversedBy: 'recipes')]
