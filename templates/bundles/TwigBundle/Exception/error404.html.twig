@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page Not Found - Recipe Archive{% endblock %}
+
+{% block body %}
+<div class="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
+    <div class="space-y-6">
+        <h1 class="text-9xl font-black text-indigo-100">404</h1>
+        
+        <div class="space-y-2">
+            <h2 class="text-3xl font-bold text-gray-900 tracking-tight sm:text-4xl">Page not found</h2>
+            <p class="text-lg text-gray-600 max-w-md mx-auto">
+                Sorry, we couldn't find the recipe or page you're looking for. It might have been moved or deleted.
+            </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+            <a href="{{ path('app_dashboard') }}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all">
+                Return to Dashboard
+            </a>
+            <a href="javascript:history.back()" class="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all">
+                Go Back
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
