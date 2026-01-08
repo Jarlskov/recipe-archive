@@ -1285,9 +1285,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             lifetime?: int|Param, // Default: 31536000
  *             path?: scalar|null|Param, // Default: "/"
  *             domain?: scalar|null|Param, // Default: null
- *             secure?: true|false|"auto"|Param, // Default: false
+ *             secure?: true|false|"auto"|Param, // Default: null
  *             httponly?: bool|Param, // Default: true
- *             samesite?: null|"lax"|"strict"|"none"|Param, // Default: null
+ *             samesite?: null|"lax"|"strict"|"none"|Param, // Default: "lax"
  *             always_remember_me?: bool|Param, // Default: false
  *             remember_me_parameter?: scalar|null|Param, // Default: "_remember_me"
  *         },
@@ -1479,6 +1479,181 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     throttle_limit?: int|Param, // Another password reset cannot be made faster than this throttle time in seconds. // Default: 3600
  *     enable_garbage_collection?: bool|Param, // Enable/Disable automatic garbage collection. // Default: true
  * }
+ * @psalm-type NelmioSecurityConfig = array{
+ *     signed_cookie?: array{
+ *         names?: list<scalar|null|Param>,
+ *         secret?: scalar|null|Param, // Default: "%kernel.secret%"
+ *         hash_algo?: scalar|null|Param,
+ *         legacy_hash_algo?: scalar|null|Param, // Fallback algorithm to allow for frictionless hash algorithm upgrades. Use with caution and as a temporary measure as it allows for downgrade attacks. // Default: null
+ *         separator?: scalar|null|Param, // Default: "."
+ *     },
+ *     clickjacking?: array{
+ *         hosts?: list<scalar|null|Param>,
+ *         paths?: array<string, array{ // Default: {"^/.*":{"header":"DENY"}}
+ *             header?: scalar|null|Param, // Default: "DENY"
+ *         }>,
+ *         content_types?: list<scalar|null|Param>,
+ *     },
+ *     external_redirects?: array{
+ *         abort?: bool|Param, // Default: false
+ *         override?: scalar|null|Param, // Default: null
+ *         forward_as?: scalar|null|Param, // Default: null
+ *         log?: bool|Param, // Default: false
+ *         allow_list?: list<scalar|null|Param>,
+ *     },
+ *     flexible_ssl?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *         cookie_name?: scalar|null|Param, // Default: "auth"
+ *         unsecured_logout?: bool|Param, // Default: false
+ *     },
+ *     forced_ssl?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *         hsts_max_age?: scalar|null|Param, // Default: null
+ *         hsts_subdomains?: bool|Param, // Default: false
+ *         hsts_preload?: bool|Param, // Default: false
+ *         allow_list?: list<scalar|null|Param>,
+ *         hosts?: list<scalar|null|Param>,
+ *         redirect_status_code?: scalar|null|Param, // Default: 302
+ *     },
+ *     content_type?: array{
+ *         nosniff?: bool|Param, // Default: false
+ *     },
+ *     xss_protection?: array{ // Deprecated: The "xss_protection" option is deprecated, use Content Security Policy without allowing "unsafe-inline" scripts instead.
+ *         enabled?: bool|Param, // Default: false
+ *         mode_block?: bool|Param, // Default: false
+ *         report_uri?: scalar|null|Param, // Default: null
+ *     },
+ *     csp?: bool|array{
+ *         enabled?: bool|Param, // Default: true
+ *         request_matcher?: scalar|null|Param, // Default: null
+ *         hosts?: list<scalar|null|Param>,
+ *         content_types?: list<scalar|null|Param>,
+ *         report_endpoint?: array{
+ *             log_channel?: scalar|null|Param, // Default: null
+ *             log_formatter?: scalar|null|Param, // Default: "nelmio_security.csp_report.log_formatter"
+ *             log_level?: "alert"|"critical"|"debug"|"emergency"|"error"|"info"|"notice"|"warning"|Param, // Default: "notice"
+ *             filters?: array{
+ *                 domains?: bool|Param, // Default: true
+ *                 schemes?: bool|Param, // Default: true
+ *                 browser_bugs?: bool|Param, // Default: true
+ *                 injected_scripts?: bool|Param, // Default: true
+ *             },
+ *             dismiss?: list<list<"default-src"|"base-uri"|"block-all-mixed-content"|"child-src"|"connect-src"|"font-src"|"form-action"|"frame-ancestors"|"frame-src"|"img-src"|"manifest-src"|"media-src"|"object-src"|"plugin-types"|"script-src"|"style-src"|"upgrade-insecure-requests"|"report-uri"|"worker-src"|"prefetch-src"|"report-to"|"*"|Param>>,
+ *         },
+ *         compat_headers?: bool|Param, // Default: true
+ *         report_logger_service?: scalar|null|Param, // Default: "logger"
+ *         hash?: array{
+ *             algorithm?: "sha256"|"sha384"|"sha512"|Param, // The algorithm to use for hashes // Default: "sha256"
+ *         },
+ *         report?: array{
+ *             level1_fallback?: bool|Param, // Provides CSP Level 1 fallback when using hash or nonce (CSP level 2) by adding 'unsafe-inline' source. See https://www.w3.org/TR/CSP2/#directive-script-src and https://www.w3.org/TR/CSP2/#directive-style-src // Default: true
+ *             browser_adaptive?: bool|array{ // Do not send directives that browser do not support
+ *                 enabled?: bool|Param, // Default: false
+ *                 parser?: scalar|null|Param, // Default: "nelmio_security.ua_parser.ua_php"
+ *             },
+ *             default-src?: list<scalar|null|Param>,
+ *             base-uri?: list<scalar|null|Param>,
+ *             block-all-mixed-content?: bool|Param, // Default: false
+ *             child-src?: list<scalar|null|Param>,
+ *             connect-src?: list<scalar|null|Param>,
+ *             font-src?: list<scalar|null|Param>,
+ *             form-action?: list<scalar|null|Param>,
+ *             frame-ancestors?: list<scalar|null|Param>,
+ *             frame-src?: list<scalar|null|Param>,
+ *             img-src?: list<scalar|null|Param>,
+ *             manifest-src?: list<scalar|null|Param>,
+ *             media-src?: list<scalar|null|Param>,
+ *             object-src?: list<scalar|null|Param>,
+ *             plugin-types?: list<scalar|null|Param>,
+ *             script-src?: list<scalar|null|Param>,
+ *             style-src?: list<scalar|null|Param>,
+ *             upgrade-insecure-requests?: bool|Param, // Default: false
+ *             report-uri?: list<scalar|null|Param>,
+ *             worker-src?: list<scalar|null|Param>,
+ *             prefetch-src?: list<scalar|null|Param>,
+ *             report-to?: scalar|null|Param,
+ *         },
+ *         enforce?: array{
+ *             level1_fallback?: bool|Param, // Provides CSP Level 1 fallback when using hash or nonce (CSP level 2) by adding 'unsafe-inline' source. See https://www.w3.org/TR/CSP2/#directive-script-src and https://www.w3.org/TR/CSP2/#directive-style-src // Default: true
+ *             browser_adaptive?: bool|array{ // Do not send directives that browser do not support
+ *                 enabled?: bool|Param, // Default: false
+ *                 parser?: scalar|null|Param, // Default: "nelmio_security.ua_parser.ua_php"
+ *             },
+ *             default-src?: list<scalar|null|Param>,
+ *             base-uri?: list<scalar|null|Param>,
+ *             block-all-mixed-content?: bool|Param, // Default: false
+ *             child-src?: list<scalar|null|Param>,
+ *             connect-src?: list<scalar|null|Param>,
+ *             font-src?: list<scalar|null|Param>,
+ *             form-action?: list<scalar|null|Param>,
+ *             frame-ancestors?: list<scalar|null|Param>,
+ *             frame-src?: list<scalar|null|Param>,
+ *             img-src?: list<scalar|null|Param>,
+ *             manifest-src?: list<scalar|null|Param>,
+ *             media-src?: list<scalar|null|Param>,
+ *             object-src?: list<scalar|null|Param>,
+ *             plugin-types?: list<scalar|null|Param>,
+ *             script-src?: list<scalar|null|Param>,
+ *             style-src?: list<scalar|null|Param>,
+ *             upgrade-insecure-requests?: bool|Param, // Default: false
+ *             report-uri?: list<scalar|null|Param>,
+ *             worker-src?: list<scalar|null|Param>,
+ *             prefetch-src?: list<scalar|null|Param>,
+ *             report-to?: scalar|null|Param,
+ *         },
+ *     },
+ *     referrer_policy?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *         policies?: list<scalar|null|Param>,
+ *     },
+ *     permissions_policy?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *         policies?: array{
+ *             accelerometer?: mixed, // Default: null
+ *             ambient_light_sensor?: mixed, // Default: null
+ *             attribution_reporting?: mixed, // Default: null
+ *             autoplay?: mixed, // Default: null
+ *             bluetooth?: mixed, // Default: null
+ *             browsing_topics?: mixed, // Default: null
+ *             camera?: mixed, // Default: null
+ *             captured_surface_control?: mixed, // Default: null
+ *             compute_pressure?: mixed, // Default: null
+ *             cross_origin_isolated?: mixed, // Default: null
+ *             deferred_fetch?: mixed, // Default: null
+ *             deferred_fetch_minimal?: mixed, // Default: null
+ *             display_capture?: mixed, // Default: null
+ *             encrypted_media?: mixed, // Default: null
+ *             fullscreen?: mixed, // Default: null
+ *             gamepad?: mixed, // Default: null
+ *             geolocation?: mixed, // Default: null
+ *             gyroscope?: mixed, // Default: null
+ *             hid?: mixed, // Default: null
+ *             identity_credentials_get?: mixed, // Default: null
+ *             idle_detection?: mixed, // Default: null
+ *             interest_cohort?: mixed, // Default: null
+ *             language_detector?: mixed, // Default: null
+ *             local_fonts?: mixed, // Default: null
+ *             magnetometer?: mixed, // Default: null
+ *             microphone?: mixed, // Default: null
+ *             midi?: mixed, // Default: null
+ *             otp_credentials?: mixed, // Default: null
+ *             payment?: mixed, // Default: null
+ *             picture_in_picture?: mixed, // Default: null
+ *             publickey_credentials_create?: mixed, // Default: null
+ *             publickey_credentials_get?: mixed, // Default: null
+ *             screen_wake_lock?: mixed, // Default: null
+ *             serial?: mixed, // Default: null
+ *             speaker_selection?: mixed, // Default: null
+ *             storage_access?: mixed, // Default: null
+ *             summarizer?: mixed, // Default: null
+ *             translator?: mixed, // Default: null
+ *             usb?: mixed, // Default: null
+ *             web_share?: mixed, // Default: null
+ *             window_management?: mixed, // Default: null
+ *             xr_spatial_tracking?: mixed, // Default: null
+ *         },
+ *     },
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1495,6 +1670,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     symfonycasts_tailwind?: SymfonycastsTailwindConfig,
  *     symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
  *     symfonycasts_reset_password?: SymfonycastsResetPasswordConfig,
+ *     nelmio_security?: NelmioSecurityConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1514,6 +1690,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         symfonycasts_tailwind?: SymfonycastsTailwindConfig,
  *         symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
  *         symfonycasts_reset_password?: SymfonycastsResetPasswordConfig,
+ *         nelmio_security?: NelmioSecurityConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1531,6 +1708,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         symfonycasts_tailwind?: SymfonycastsTailwindConfig,
  *         symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
  *         symfonycasts_reset_password?: SymfonycastsResetPasswordConfig,
+ *         nelmio_security?: NelmioSecurityConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -1550,6 +1728,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
  *         dama_doctrine_test?: DamaDoctrineTestConfig,
  *         symfonycasts_reset_password?: SymfonycastsResetPasswordConfig,
+ *         nelmio_security?: NelmioSecurityConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,
