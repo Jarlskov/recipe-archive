@@ -13,6 +13,7 @@ Build a mobile-friendly web application to store and organize references to reci
     - Acts as a folder/container for multiple versions of a recipe (e.g., "Grandma's version" vs. "NYT Cooking version").
 3. **Ingredients**
     - Recipes are tagged with ingredients to allow filtering (e.g., "Find recipes with Eggplant").
+    - A Dish can also be an ingredient (e.g., "Tomato Sauce") making the relationship cyclic.
 4. **General Tags**
     - Ad-hoc labels for flexible grouping (e.g., "Quick", "Vegetarian", "Party").
 
@@ -20,3 +21,4 @@ Build a mobile-friendly web application to store and organize references to reci
 - **Mobile-First Design:** Optimized for use "on the go" (e.g., in the grocery store or kitchen).
 - **Organization:** Grouping by Dish, filtering by Ingredients, and tagging.
 - **Simplicity:** Focus on storing *where* the recipe is, rather than building a complex editor for recipe steps.
+- Data is publicly available (viewable) but only the owner can modify and delete.

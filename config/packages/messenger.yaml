@@ -34,3 +34,9 @@ when@test:
             transports:
                 async: 'sync://'
                 failed: 'sync://'
+                test_sync: 'sync://'
+            routing:
+                Symfony\Component\Mailer\Messenger\SendEmailMessage: test_sync
+                Symfony\Component\Notifier\Message\ChatMessage: test_sync
+                Symfony\Component\Notifier\Message\SmsMessage: test_sync
+
