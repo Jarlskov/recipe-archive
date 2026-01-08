@@ -35,6 +35,9 @@ jobs:
       - name: Install dependencies
         run: composer install --no-interaction --no-progress
 
+      - name: Build Tailwind CSS
+        run: bin/console tailwind:build
+
       - name: Create database schema
         run: |
           mkdir -p var
