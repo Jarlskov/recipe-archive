@@ -7,8 +7,6 @@ namespace App\Form;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\QueryBuilder;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
@@ -54,14 +52,6 @@ abstract class AbstractCreatableEntityAutocompleteField extends AbstractType
     abstract protected function createEntity(string $label): object;
 
     /**
-     * @return bool
-     */
-    protected function canCreate(): bool
-    {
-        return true;
-    }
-
-    /**
      * @param FormBuilderInterface $builder
      * @param array<string, mixed> $options
      * @return void
@@ -78,16 +68,16 @@ abstract class AbstractCreatableEntityAutocompleteField extends AbstractType
                 }
                 return $entities && method_exists($entities, 'getId') ? (string) $entities->getId() : '';
             },
-            function (?string $ids) use ($options): mixed {
+            function (mixed $ids) use ($options): mixed {
                 if ($options['multiple']) {
                     $collection = new ArrayCollection();
-                    if (!$ids) {
+                    if (empty($ids)) {
                         return $collection;
                     }
 
-                    $values = explode(',', $ids);
+                    $values = is_string($ids) ? explode(',', $ids) : (is_array($ids) ? $ids : []);
                     foreach ($values as $value) {
-                        $entity = $this->resolveEntity($value);
+                        $entity = $this->resolveEntity($value, $options);
                         if ($entity) {
                             $collection->add($entity);
                         }
@@ -95,16 +85,17 @@ abstract class AbstractCreatableEntityAutocompleteField extends AbstractType
                     return $collection;
                 }
 
-                return $ids ? $this->resolveEntity($ids) : null;
+                return $ids ? $this->resolveEntity($ids, $options) : null;
             }
         ));
     }
 
     /**
      * @param mixed $value
+     * @param array<string, mixed> $options
      * @return object|null
      */
-    private function resolveEntity(mixed $value): ?object
+    private function resolveEntity(mixed $value, array $options): ?object
     {
         if (is_array($value)) {
             $value = $value['value'] ?? reset($value);
@@ -118,7 +109,7 @@ abstract class AbstractCreatableEntityAutocompleteField extends AbstractType
             return $this->entityManager->getRepository($this->getEntityClass())->find($value);
         }
 
-        if ($this->canCreate()) {
+        if ($options['create'] ?? true) {
             $repository = $this->entityManager->getRepository($this->getEntityClass());
             $entity = $repository->findOneBy(['name' => $value]);
             
@@ -157,13 +148,13 @@ abstract class AbstractCreatableEntityAutocompleteField extends AbstractType
                     $this->addInitialOption($initialOptions, $selectedItems, $entity, $entityClass);
                 }
             }
-        } else {
+        } elseif ($data) {
             $this->addInitialOption($initialOptions, $selectedItems, $data, $entityClass);
         }
 
         $tomSelectOptions = [
-            'create' => $this->canCreate(),
-            'createOnBlur' => $this->canCreate(),
+            'create' => $options['create'],
+            'createOnBlur' => $options['create'],
             'plugins' => ['remove_button'],
             'options' => $initialOptions,
             'items' => $selectedItems,
@@ -173,8 +164,32 @@ abstract class AbstractCreatableEntityAutocompleteField extends AbstractType
             'maxItems' => $options['multiple'] ? null : 1,
         ];
 
-        // Use JSON_UNESCAPED_UNICODE to ensure Danish characters are readable in HTML attributes
         $view->vars['attr']['data-symfony--ux-autocomplete--autocomplete-tom-select-options-value'] = json_encode($tomSelectOptions, JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * @param FormView $view
+     * @param FormInterface $form
+     * @param array<string, mixed> $options
+     * @return void
+     */
+    public function finishView(FormView $view, FormInterface $form, array $options): void
+    {
+        // Ensure no arrays are passed to HTML attributes, which causes "Array to string conversion" errors
+        if (isset($view->vars['attr'])) {
+            foreach ($view->vars['attr'] as $key => $value) {
+                if (is_array($value)) {
+                    unset($view->vars['attr'][$key]);
+                }
+            }
+        }
+        
+        // Also check variables directly in the view
+        foreach (['extra_options', 'tom_select_options'] as $key) {
+            if (isset($view->vars[$key]) && is_array($view->vars[$key])) {
+                unset($view->vars[$key]);
+            }
+        }
     }
 
     /**
@@ -207,17 +222,12 @@ abstract class AbstractCreatableEntityAutocompleteField extends AbstractType
             'choice_label' => 'name',
             'multiple' => true,
             'security' => 'ROLE_USER',
-            'searchable_fields' => ['name'],
             'allow_extra_fields' => true,
-            'filter_query' => function (QueryBuilder $qb, string $query, EntityRepository $repository): void {
-                if (!$query) {
-                    return;
-                }
-                // SQLite LIKE is case-sensitive for non-ASCII. LOWER() is a best-effort fix.
-                $qb->andWhere('LOWER(entity.name) LIKE LOWER(:query)')
-                   ->setParameter('query', '%'.$query.'%');
-            },
+            'searchable_fields' => ['name'],
+            'create' => true,
         ]);
+
+        $resolver->setDefined(['extra_options', 'tom_select_options']);
     }
 
     /**

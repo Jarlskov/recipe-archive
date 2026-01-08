@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\SearchFilterType;
 use App\Repository\DishRepository;
 use App\Repository\RecipeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,7 +21,7 @@ class DashboardController extends AbstractController
 {
     /**
      * Renders the user dashboard with their dishes and standalone recipes.
-     * Supports filtering by a search query.
+     * Supports filtering by search query, multiple tags, and multiple ingredients.
      *
      * @param Request $request
      * @param DishRepository $dishRepository
@@ -29,39 +30,25 @@ class DashboardController extends AbstractController
      */
     #[Route('/', name: 'app_dashboard')]
     #[IsGranted('ROLE_USER')]
-    public function index(Request $request, DishRepository $dishRepository, RecipeRepository $recipeRepository): Response
-    {
+    public function index(
+        Request $request,
+        DishRepository $dishRepository,
+        RecipeRepository $recipeRepository
+    ): Response {
         /** @var User $user */
         $user = $this->getUser();
-        $query = $request->query->get('q');
+        
+        $searchForm = $this->createForm(SearchFilterType::class);
+        $searchForm->handleRequest($request);
+        
+        $formData = $searchForm->getData() ?? [];
+        $query = $formData['q'] ?? null;
+        $activeTags = $formData['tags'] ?? [];
+        $activeIngredients = $formData['ingredients'] ?? [];
 
-        if ($query) {
-            $dishes = $dishRepository->createQueryBuilder('d')
-                ->leftJoin('d.recipes', 'r')
-                ->where('d.user = :user')
-                ->andWhere('d.name LIKE :query OR r.title LIKE :query OR r.author LIKE :query')
-                ->setParameter('user', $user)
-                ->setParameter('query', '%' . $query . '%')
-                ->distinct()
-                ->getQuery()
-                ->getResult();
-
-            $standaloneRecipes = $recipeRepository->createQueryBuilder('r')
-                ->where('r.user = :user')
-                ->andWhere('r.dish IS NULL')
-                ->andWhere('r.title LIKE :query OR r.author LIKE :query')
-                ->setParameter('user', $user)
-                ->setParameter('query', '%' . $query . '%')
-                ->getQuery()
-                ->getResult();
-        } else {
-            $dishes = $user->getDishes();
-            $standaloneRecipes = $recipeRepository->findBy([
-                'user' => $user,
-                'dish' => null,
-            ]);
-        }
-
+        $dishes = $dishRepository->findDishesForUser($user, $query, $activeTags, $activeIngredients);
+        $standaloneRecipes = $recipeRepository->findStandaloneRecipes($user, $query, $activeTags, $activeIngredients);
+        
         $recipeCount = $user->getRecipes()->count();
 
         return $this->render('dashboard/index.html.twig', [
@@ -69,6 +56,9 @@ class DashboardController extends AbstractController
             'standaloneRecipes' => $standaloneRecipes,
             'recipeCount' => $recipeCount,
             'searchQuery' => $query,
+            'activeTags' => $activeTags,
+            'activeIngredients' => $activeIngredients,
+            'searchForm' => $searchForm,
         ]);
     }
 }
