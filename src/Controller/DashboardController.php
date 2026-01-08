@@ -39,7 +39,7 @@ class DashboardController extends AbstractController
         $user = $this->getUser();
         
         $searchForm = $this->createForm(SearchFilterType::class);
-        $searchForm->handleRequest($request);
+        $searchForm->submit($request->query->all(), false);
         
         $formData = $searchForm->getData() ?? [];
         $query = $formData['q'] ?? null;

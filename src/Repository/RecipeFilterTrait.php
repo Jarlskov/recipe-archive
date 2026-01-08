@@ -49,7 +49,7 @@ trait RecipeFilterTrait
                 WHERE %s.%s = %s 
                 AND %s.id IN (:%s) 
                 GROUP BY %s.id 
-                HAVING COUNT(%s.id) = :%s
+                HAVING COUNT(DISTINCT %s.id) = :%s
             )',
             $subRecipeAlias,
             $subRecipeAlias,
