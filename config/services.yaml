@@ -9,8 +9,6 @@
 parameters:
     default_mail_from: 'noreply@example.com'
     default_mail_name: 'Recipe Archive'
-    app.mail_from_address: '%env(default:default_mail_from:MAIL_FROM_ADDRESS)%'
-    app.mail_from_name: '%env(default:default_mail_name:MAIL_FROM_NAME)%'
 
 services:
     # default configuration for services in *this* file

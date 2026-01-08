@@ -1,6 +1,8 @@
 framework:
     mailer:
         dsn: '%env(MAILER_DSN)%'
+        headers:
+            From: '%env(default:default_mail_name:MAIL_FROM_NAME)% <%env(default:default_mail_from:MAIL_FROM_ADDRESS)%>'
 
 when@test:
     framework:
