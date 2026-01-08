@@ -119,7 +119,7 @@
         {% endif %}
 
         {% if standaloneRecipes|length > 0 %}
-            <div class="mt-12">
+            <div class="mt-12" id="unassigned-recipes">
                 <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b border-gray-100 pb-4">Unassigned Recipes</h2>
                 <div class="space-y-4">
                     {% for recipe in standaloneRecipes %}
