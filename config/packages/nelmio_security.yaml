@@ -1,0 +1,51 @@
+nelmio_security:
+    # X-Frame-Options
+    clickjacking:
+        paths:
+            '^/.*': DENY
+
+    # X-Content-Type-Options
+    content_type:
+        nosniff: true
+
+    # X-XSS-Protection
+    xss_protection:
+        enabled: true
+        mode_block: true
+
+    # Content Security Policy
+    csp:
+        enabled: true
+        hosts: []
+        content_types: []
+        enforce:
+            level1_fallback: false
+            # Use 'self' as a safe default
+            default-src: [ 'self' ]
+            # Allow scripts from self, unsafe-inline (needed for importmap shims), unsafe-eval (for Stimulus), and data: (for AssetMapper)
+            script-src:
+                - 'self'
+                - 'unsafe-inline'
+                - 'unsafe-eval'
+                - 'data:'
+            # Allow styles from self and unsafe-inline (needed for TomSelect/Tailwind)
+            style-src:
+                - 'self'
+                - 'unsafe-inline'
+            # Allow images from self and data: (for favicon/placeholders)
+            img-src:
+                - 'self'
+                - 'data:'
+            # Allow connects to self (Turbo/fetch)
+            connect-src: [ 'self' ]
+            font-src: [ 'self' ]
+            object-src: [ 'none' ]
+            base-uri: [ 'self' ]
+            form-action: [ 'self' ]
+            frame-ancestors: [ 'none' ]
+            upgrade-insecure-requests: true
+
+    # Referrer Policy
+    referrer_policy:
+        enabled: true
+        policies: [ 'no-referrer-when-downgrade' ]
