@@ -16,6 +16,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use SymfonyCasts\Bundle\ResetPassword\Controller\ResetPasswordControllerTrait;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
@@ -32,12 +35,28 @@ class ResetPasswordController extends AbstractController
     ) {
     }
 
-    /**
-     * Display & process form to request a password reset.
-     */
-    #[Route('', name: 'app_forgot_password_request')]
-    public function request(Request $request): Response
-    {
+        /**
+
+         * Display & process form to request a password reset.
+
+         */
+
+        #[Route('', name: 'app_forgot_password_request')]
+
+        public function request(
+
+            Request $request,
+
+            #[Autowire(service: 'limiter.password_reset_client')]
+
+            RateLimiterFactory $passwordResetClientLimiter
+
+        ): Response {
+        $limiter = $passwordResetClientLimiter->create($request->getClientIp());
+        if (false === $limiter->consume(1)->isAccepted()) {
+            throw new TooManyRequestsHttpException();
+        }
+
         $form = $this->createForm(ResetPasswordRequestFormType::class);
         $form->handleRequest($request);
 
