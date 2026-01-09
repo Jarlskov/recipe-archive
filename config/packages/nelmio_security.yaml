@@ -20,23 +20,19 @@ nelmio_security:
         content_types: []
         enforce:
             level1_fallback: false
-            # Use 'self' as a safe default
+            # Simple keywords for compatibility
             default-src: [ 'self' ]
-            # Allow scripts from self, unsafe-inline (needed for importmap shims), unsafe-eval (for Stimulus), and data: (for AssetMapper)
             script-src:
                 - 'self'
                 - 'unsafe-inline'
                 - 'unsafe-eval'
                 - 'data:'
-            # Allow styles from self and unsafe-inline (needed for TomSelect/Tailwind)
             style-src:
                 - 'self'
                 - 'unsafe-inline'
-            # Allow images from self and data: (for favicon/placeholders)
             img-src:
                 - 'self'
                 - 'data:'
-            # Allow connects to self (Turbo/fetch)
             connect-src: [ 'self' ]
             font-src: [ 'self' ]
             object-src: [ 'none' ]

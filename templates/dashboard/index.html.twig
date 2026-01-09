@@ -55,14 +55,6 @@
         <!-- Dishes Grid Header -->
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 border-b border-gray-100 pb-4">
             <h2 class="text-2xl font-bold text-gray-900">Your Dishes</h2>
-            <div class="flex space-x-3 w-full sm:w-auto">
-                <a href="{{ path('app_recipe_new') }}" class="flex-1 sm:flex-none inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
-                    Add Recipe
-                </a>
-                <a href="{{ path('app_dish_new') }}" class="flex-1 sm:flex-none inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
-                    Add Dish
-                </a>
-            </div>
         </div>
 
         {% if dishes|length > 0 %}
@@ -106,14 +98,6 @@
                     </svg>
                     <h3 class="mt-2 text-sm font-medium text-gray-900">No dishes or recipes</h3>
                     <p class="mt-1 text-sm text-gray-500">Get started by creating your first dish or recipe.</p>
-                    <div class="mt-6 flex justify-center space-x-3">
-                        <a href="{{ path('app_recipe_new') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            Add Recipe
-                        </a>
-                        <a href="{{ path('app_dish_new') }}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            Add Dish
-                        </a>
-                    </div>
                 </div>
             {% endif %}
         {% endif %}
