@@ -1,0 +1,13 @@
+framework:
+    rate_limiter:
+        # Throttles registration attempts by IP
+        registration_client:
+            policy: 'fixed_window'
+            limit: 5
+            interval: '60 minutes'
+
+        # Throttles password reset requests by IP
+        password_reset_client:
+            policy: 'fixed_window'
+            limit: 3
+            interval: '60 minutes'
