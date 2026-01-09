@@ -1,86 +1,80 @@
-{% extends 'base.html.twig' %}
+<turbo-frame id="modal-content">
+    <div class="relative bg-white p-8" 
+         data-controller="recipe-creation"
+         data-recipe-creation-metadata-url-value="{{ path('app_recipe_metadata') }}">
+        
+        <!-- Close button -->
+        <button type="button" data-action="click->modal#close" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
 
-{% block title %}New Recipe - Recipe Archive{% endblock %}
+        <h1 class="text-2xl font-extrabold text-gray-900 mb-6 text-center">Add New Recipe</h1>
 
-{% block body %}
-    <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <!-- Breadcrumbs -->
-        <nav class="flex mb-8" aria-label="Breadcrumb">
-            <ol class="flex items-center space-x-2">
-                <li>
-                    <a href="{{ path('app_dashboard') }}" class="text-sm font-medium text-gray-500 hover:text-indigo-600 transition-colors">Dashboard</a>
-                </li>
-                {% if recipe.dish %}
-                    <li>
-                        <div class="flex items-center">
-                            <svg class="flex-shrink-0 h-5 w-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                            </svg>
-                            <a href="{{ path('app_dish_show', {'id': recipe.dish.id}) }}" class="ml-2 text-sm font-medium text-gray-500 hover:text-indigo-600 transition-colors">{{ recipe.dish.name }}</a>
-                        </div>
-                    </li>
-                {% endif %}
-                <li>
-                    <div class="flex items-center">
-                        <svg class="flex-shrink-0 h-5 w-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                        </svg>
-                        <span class="ml-2 text-sm font-bold text-gray-900">New Recipe</span>
-                    </div>
-                </li>
-            </ol>
-        </nav>
+        {{ form_start(form, {'action': path('app_recipe_new', app.request.query.all), 'attr': {'data-turbo-frame': 'modal-content', 'class': 'space-y-6'}}) }}
+            <div>
+                {{ form_label(form.reference, null, {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 mb-2'}}) }}
+                {{ form_widget(form.reference, {
+                    'attr': {
+                        'data-recipe-creation-target': 'reference',
+                        'data-action': 'input->recipe-creation#checkReference'
+                    }
+                }) }}
+                {{ form_errors(form.reference) }}
+                <p class="mt-1 text-xs text-gray-500 italic">Enter a URL or a book reference to continue.</p>
+            </div>
 
-        <div class="max-w-3xl mx-auto bg-white shadow-xl rounded-2xl p-8 border border-gray-100">
-            <h1 class="text-2xl font-extrabold text-gray-900 mb-8 text-center">Create New Recipe</h1>
-            
-            {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
-                <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                    <div class="sm:col-span-4">
+            <!-- Loading indicator -->
+            <div data-recipe-creation-target="loading" class="hidden flex items-center justify-center py-4">
+                <svg class="animate-spin h-5 w-5 text-indigo-600 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span class="text-sm text-gray-600 font-medium">Fetching recipe details...</span>
+            </div>
+
+            <!-- Remaining fields, hidden initially -->
+            <div data-recipe-creation-target="details" class="hidden space-y-6 animate-in fade-in duration-300">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
                         {{ form_label(form.title, null, {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 mb-2'}}) }}
-                        {{ form_widget(form.title) }}
-                        {{ form_errors(form.title, {'attr': {'class': 'mt-2 text-sm text-red-600 font-medium'}}) }}
+                        {{ form_widget(form.title, {'attr': {'data-recipe-creation-target': 'title'}}) }}
+                        {{ form_errors(form.title) }}
                     </div>
-
-                    <div class="sm:col-span-2">
+                    <div>
                         {{ form_label(form.author, null, {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 mb-2'}}) }}
-                        {{ form_widget(form.author) }}
-                        {{ form_errors(form.author, {'attr': {'class': 'mt-2 text-sm text-red-600 font-medium'}}) }}
+                        {{ form_widget(form.author, {'attr': {'data-recipe-creation-target': 'author'}}) }}
+                        {{ form_errors(form.author) }}
                     </div>
+                </div>
 
-                    <div class="sm:col-span-6">
-                        {{ form_label(form.reference, null, {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 mb-2'}}) }}
-                        {{ form_widget(form.reference) }}
-                        {{ form_errors(form.reference, {'attr': {'class': 'mt-2 text-sm text-red-600 font-medium'}}) }}
-                        <p class="mt-2 text-xs text-gray-500">URL starting with http or book/page description.</p>
-                    </div>
+                <div>
+                    {{ form_label(form.dish, null, {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 mb-2'}}) }}
+                    {{ form_widget(form.dish) }}
+                    {{ form_errors(form.dish) }}
+                </div>
 
-                    <div class="sm:col-span-6">
-                        {{ form_label(form.dish, null, {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 mb-2'}}) }}
-                        {{ form_widget(form.dish) }}
-                        {{ form_errors(form.dish, {'attr': {'class': 'mt-2 text-sm text-red-600 font-medium'}}) }}
-                    </div>
-
-                    <div class="sm:col-span-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
                         {{ form_label(form.tags, null, {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 mb-2'}}) }}
                         {{ form_widget(form.tags) }}
                     </div>
-
-                    <div class="sm:col-span-3">
+                    <div>
                         {{ form_label(form.ingredients, null, {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 mb-2'}}) }}
                         {{ form_widget(form.ingredients) }}
                     </div>
                 </div>
 
-                <div class="pt-8 flex flex-col sm:flex-row-reverse gap-3">
+                <div class="pt-6 flex flex-col sm:flex-row-reverse gap-3 border-t border-gray-100">
                     <button type="submit" class="w-full inline-flex justify-center py-2.5 px-4 border border-transparent shadow-sm text-sm font-bold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all">
                         Save Recipe
                     </button>
-                    <a href="{{ recipe.dish ? path('app_dish_show', {'id': recipe.dish.id}) : path('app_dashboard') }}" class="w-full inline-flex justify-center py-2.5 px-4 border border-gray-300 shadow-sm text-sm font-semibold rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all">
+                    <button type="button" data-action="click->modal#close" class="w-full inline-flex justify-center py-2.5 px-4 border border-gray-300 shadow-sm text-sm font-semibold rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all">
                         Cancel
-                    </a>
+                    </button>
                 </div>
-            {{ form_end(form) }}
-        </div>
+            </div>
+        {{ form_end(form) }}
     </div>
-{% endblock %}
+</turbo-frame>

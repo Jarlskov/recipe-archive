@@ -21,4 +21,8 @@ Build a mobile-friendly web application to store and organize references to reci
 - **Mobile-First Design:** Optimized for use "on the go" (e.g., in the grocery store or kitchen).
 - **Organization:** Grouping by Dish, filtering by Ingredients, and tagging.
 - **Simplicity:** Focus on storing *where* the recipe is, rather than building a complex editor for recipe steps.
+- **Simple recipe flow**: Scrape URL and make data suggestion for recipes based on URL.
+
+## Future plans
 - Data is publicly available (viewable) but only the owner can modify and delete.
+- Recipe/Dish images

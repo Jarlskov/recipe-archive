@@ -61,4 +61,11 @@ class DashboardController extends AbstractController
             'searchForm' => $searchForm,
         ]);
     }
+
+    #[Route('/creation-choice', name: 'app_creation_choice')]
+    #[IsGranted('ROLE_USER')]
+    public function creationChoice(): Response
+    {
+        return $this->render('dashboard/creation_choice.html.twig');
+    }
 }

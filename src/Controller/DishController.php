@@ -45,6 +45,10 @@ class DishController extends AbstractController
 
             $this->addFlash('success', 'Dish created successfully!');
 
+            if ($request->headers->get('Turbo-Frame')) {
+                return $this->redirectToRoute('app_dashboard');
+            }
+
             return $this->redirectToRoute('app_dish_show', ['id' => $dish->getId()]);
         }
 

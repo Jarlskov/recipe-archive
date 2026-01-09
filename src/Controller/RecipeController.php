@@ -65,6 +65,10 @@ class RecipeController extends AbstractController
 
             $this->addFlash('success', 'Recipe created successfully!');
 
+            if ($request->headers->get('Turbo-Frame')) {
+                return $this->redirectToRoute('app_dashboard');
+            }
+
             if ($recipe->getDish()) {
                 return $this->redirectToRoute('app_dish_show', ['id' => $recipe->getDish()->getId()]);
             }
