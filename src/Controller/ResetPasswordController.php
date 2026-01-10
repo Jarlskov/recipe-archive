@@ -35,23 +35,15 @@ class ResetPasswordController extends AbstractController
     ) {
     }
 
-        /**
-
-         * Display & process form to request a password reset.
-
-         */
-
-        #[Route('', name: 'app_forgot_password_request')]
-
-        public function request(
-
-            Request $request,
-
-            #[Autowire(service: 'limiter.password_reset_client')]
-
-            RateLimiterFactory $passwordResetClientLimiter
-
-        ): Response {
+    /**
+     * Display & process form to request a password reset.
+     */
+    #[Route('', name: 'app_forgot_password_request')]
+    public function request(
+        Request $request,
+        #[Autowire(service: 'limiter.password_reset_client')]
+        RateLimiterFactory $passwordResetClientLimiter
+    ): Response {
         $limiter = $passwordResetClientLimiter->create($request->getClientIp());
         if (false === $limiter->consume(1)->isAccepted()) {
             throw new TooManyRequestsHttpException();
