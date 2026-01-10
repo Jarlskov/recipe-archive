@@ -13,11 +13,26 @@ framework:
     #esi: true
     #fragments: true
 
+    rate_limiter:
+        registration_client:
+            policy: 'fixed_window'
+            limit: 5
+            interval: '60 minutes'
+        password_reset_client:
+            policy: 'fixed_window'
+            limit: 3
+            interval: '60 minutes'
+
 when@test:
     framework:
         test: true
         session:
             storage_factory_id: session.storage.factory.mock_file
+        rate_limiter:
+            registration_client:
+                limit: 1000
+            password_reset_client:
+                limit: 1000
         messenger:
             routing:
                 'Symfony\Component\Mailer\Messenger\SendEmailMessage': sync
