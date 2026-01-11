@@ -8,11 +8,6 @@ nelmio_security:
     content_type:
         nosniff: true
 
-    # X-XSS-Protection
-    xss_protection:
-        enabled: true
-        mode_block: true
-
     # Content Security Policy
     csp:
         enabled: true
