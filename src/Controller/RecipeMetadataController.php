@@ -10,12 +10,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\DomCrawler\Crawler;
+use Psr\Log\LoggerInterface;
 
 #[Route('/recipe/metadata', name: 'app_recipe_metadata', methods: ['GET'])]
 class RecipeMetadataController extends AbstractController
 {
     public function __construct(
-        private readonly HttpClientInterface $httpClient
+        private readonly HttpClientInterface $httpClient,
+        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -58,6 +60,12 @@ class RecipeMetadataController extends AbstractController
                 'author' => $author,
             ]);
         } catch (\Exception $e) {
+            $this->logger->error('Failed to fetch recipe metadata', [
+                'url' => $url,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
             return new JsonResponse(['error' => 'Could not fetch metadata'], 500);
         }
     }
