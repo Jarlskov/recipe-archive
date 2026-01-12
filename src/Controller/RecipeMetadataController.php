@@ -12,8 +12,10 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Target;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/recipe/metadata', name: 'app_recipe_metadata', methods: ['GET'])]
+#[IsGranted('ROLE_USER')]
 class RecipeMetadataController extends AbstractController
 {
     public function __construct(
