@@ -11,13 +11,14 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 
 #[Route('/recipe/metadata', name: 'app_recipe_metadata', methods: ['GET'])]
 class RecipeMetadataController extends AbstractController
 {
     public function __construct(
         private readonly HttpClientInterface $httpClient,
-        private readonly LoggerInterface $logger
+        #[Target('recipe_metadata.logger')] private readonly LoggerInterface $logger
     ) {
     }
 
