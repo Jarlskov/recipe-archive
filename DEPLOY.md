@@ -67,12 +67,17 @@ This project uses **AssetMapper** and **Tailwind CSS**. You must compile them on
     php bin/console doctrine:migrations:migrate --no-interaction
     ```
 
-## 7. Folder Permissions
-Ensure the web server user (`www-data`) can write to the `var/` directory.
+## 7. Folder Permissions (CRITICAL)
+Symfony MUST be able to write to the `var/` directory in production. If permissions are wrong, the site will return a 500 error with NO logs because the logger cannot start.
+
+Always ensure the web server user (usually `www-data`) owns these directories **after** running any composer or console commands:
 
 ```bash
-chown -R www-data:www-data var/
+sudo chown -R www-data:www-data var/ public/assets/
+sudo chmod -R 775 var/ public/assets/
 ```
+
+*Note: If you run `composer install` or `cache:clear` as a different user, you MUST re-run the chown command.*
 
 ## 8. Web Server Configuration (Nginx)
 1.  Copy the provided `nginx.conf` to your Nginx sites directory:
