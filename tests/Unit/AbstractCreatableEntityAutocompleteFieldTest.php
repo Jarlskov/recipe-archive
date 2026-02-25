@@ -24,10 +24,10 @@ class AbstractCreatableEntityAutocompleteFieldTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
-        $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
-        $this->security = $this->createMock(Security::class);
-        $this->repository = $this->createMock(EntityRepository::class);
+        $this->entityManager = $this->createStub(EntityManagerInterface::class);
+        $this->urlGenerator = $this->createStub(UrlGeneratorInterface::class);
+        $this->security = $this->createStub(Security::class);
+        $this->repository = $this->createStub(EntityRepository::class);
 
         $this->entityManager
             ->method('getRepository')
@@ -58,10 +58,10 @@ class AbstractCreatableEntityAutocompleteFieldTest extends TestCase
         $this->assertNotNull($capturedTransformer);
 
         // Test the transform direction (entity collection -> CSV string)
-        $tag1 = $this->createMock(Tag::class);
+        $tag1 = $this->createStub(Tag::class);
         $tag1->method('getId')->willReturn(1);
 
-        $tag2 = $this->createMock(Tag::class);
+        $tag2 = $this->createStub(Tag::class);
         $tag2->method('getId')->willReturn(2);
 
         $collection = new ArrayCollection([$tag1, $tag2]);
@@ -77,10 +77,10 @@ class AbstractCreatableEntityAutocompleteFieldTest extends TestCase
 
     public function testTransformerConvertsIdsToEntities(): void
     {
-        $tag1 = $this->createMock(Tag::class);
+        $tag1 = $this->createStub(Tag::class);
         $tag1->method('getId')->willReturn(1);
 
-        $tag2 = $this->createMock(Tag::class);
+        $tag2 = $this->createStub(Tag::class);
         $tag2->method('getId')->willReturn(2);
 
         $this->repository
@@ -165,7 +165,7 @@ class AbstractCreatableEntityAutocompleteFieldTest extends TestCase
 
     public function testTransformerReusesExistingEntityByName(): void
     {
-        $existingTag = $this->createMock(Tag::class);
+        $existingTag = $this->createStub(Tag::class);
         $existingTag->method('getName')->willReturn('ExistingTag');
         $existingTag->method('getId')->willReturn(99);
 
@@ -257,7 +257,7 @@ class AbstractCreatableEntityAutocompleteFieldTest extends TestCase
 
         $field->buildForm($builder, ['multiple' => false]);
 
-        $tag = $this->createMock(Tag::class);
+        $tag = $this->createStub(Tag::class);
         $tag->method('getId')->willReturn(42);
 
         $reflection = new \ReflectionClass($capturedTransformer);
@@ -271,7 +271,7 @@ class AbstractCreatableEntityAutocompleteFieldTest extends TestCase
 
     public function testTransformerSingleModeConvertsIdToEntity(): void
     {
-        $tag = $this->createMock(Tag::class);
+        $tag = $this->createStub(Tag::class);
         $tag->method('getId')->willReturn(42);
 
         $this->repository
@@ -375,7 +375,7 @@ class AbstractCreatableEntityAutocompleteFieldTest extends TestCase
 
     public function testTransformerHandlesMixedNumericAndStringIds(): void
     {
-        $existingTag = $this->createMock(Tag::class);
+        $existingTag = $this->createStub(Tag::class);
         $existingTag->method('getId')->willReturn(1);
         $existingTag->method('getName')->willReturn('Existing');
 

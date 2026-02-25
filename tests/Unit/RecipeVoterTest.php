@@ -22,7 +22,7 @@ class RecipeVoterTest extends TestCase
 
     public function testSupportsRecipeEditAttribute(): void
     {
-        $recipe = $this->createMock(Recipe::class);
+        $recipe = $this->createStub(Recipe::class);
 
         $reflection = new \ReflectionClass($this->voter);
         $method = $reflection->getMethod('supports');
@@ -34,7 +34,7 @@ class RecipeVoterTest extends TestCase
 
     public function testSupportsRecipeViewAttribute(): void
     {
-        $recipe = $this->createMock(Recipe::class);
+        $recipe = $this->createStub(Recipe::class);
 
         $reflection = new \ReflectionClass($this->voter);
         $method = $reflection->getMethod('supports');
@@ -46,7 +46,7 @@ class RecipeVoterTest extends TestCase
 
     public function testSupportsRecipeDeleteAttribute(): void
     {
-        $recipe = $this->createMock(Recipe::class);
+        $recipe = $this->createStub(Recipe::class);
 
         $reflection = new \ReflectionClass($this->voter);
         $method = $reflection->getMethod('supports');
@@ -58,7 +58,7 @@ class RecipeVoterTest extends TestCase
 
     public function testDoesNotSupportInvalidAttribute(): void
     {
-        $recipe = $this->createMock(Recipe::class);
+        $recipe = $this->createStub(Recipe::class);
 
         $reflection = new \ReflectionClass($this->voter);
         $method = $reflection->getMethod('supports');
@@ -82,12 +82,12 @@ class RecipeVoterTest extends TestCase
 
     public function testOwnerCanViewRecipe(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
 
-        $recipe = $this->createMock(Recipe::class);
+        $recipe = $this->createStub(Recipe::class);
         $recipe->method('getUser')->willReturn($user);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($user);
 
         $result = $this->voter->vote($token, $recipe, [RecipeVoter::VIEW]);
@@ -97,12 +97,12 @@ class RecipeVoterTest extends TestCase
 
     public function testOwnerCanEditRecipe(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
 
-        $recipe = $this->createMock(Recipe::class);
+        $recipe = $this->createStub(Recipe::class);
         $recipe->method('getUser')->willReturn($user);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($user);
 
         $result = $this->voter->vote($token, $recipe, [RecipeVoter::EDIT]);
@@ -112,12 +112,12 @@ class RecipeVoterTest extends TestCase
 
     public function testOwnerCanDeleteRecipe(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
 
-        $recipe = $this->createMock(Recipe::class);
+        $recipe = $this->createStub(Recipe::class);
         $recipe->method('getUser')->willReturn($user);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($user);
 
         $result = $this->voter->vote($token, $recipe, [RecipeVoter::DELETE]);
@@ -127,13 +127,13 @@ class RecipeVoterTest extends TestCase
 
     public function testNonOwnerCannotViewRecipe(): void
     {
-        $owner = $this->createMock(User::class);
-        $otherUser = $this->createMock(User::class);
+        $owner = $this->createStub(User::class);
+        $otherUser = $this->createStub(User::class);
 
-        $recipe = $this->createMock(Recipe::class);
+        $recipe = $this->createStub(Recipe::class);
         $recipe->method('getUser')->willReturn($owner);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($otherUser);
 
         $result = $this->voter->vote($token, $recipe, [RecipeVoter::VIEW]);
@@ -143,13 +143,13 @@ class RecipeVoterTest extends TestCase
 
     public function testNonOwnerCannotEditRecipe(): void
     {
-        $owner = $this->createMock(User::class);
-        $otherUser = $this->createMock(User::class);
+        $owner = $this->createStub(User::class);
+        $otherUser = $this->createStub(User::class);
 
-        $recipe = $this->createMock(Recipe::class);
+        $recipe = $this->createStub(Recipe::class);
         $recipe->method('getUser')->willReturn($owner);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($otherUser);
 
         $result = $this->voter->vote($token, $recipe, [RecipeVoter::EDIT]);
@@ -159,13 +159,13 @@ class RecipeVoterTest extends TestCase
 
     public function testNonOwnerCannotDeleteRecipe(): void
     {
-        $owner = $this->createMock(User::class);
-        $otherUser = $this->createMock(User::class);
+        $owner = $this->createStub(User::class);
+        $otherUser = $this->createStub(User::class);
 
-        $recipe = $this->createMock(Recipe::class);
+        $recipe = $this->createStub(Recipe::class);
         $recipe->method('getUser')->willReturn($owner);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($otherUser);
 
         $result = $this->voter->vote($token, $recipe, [RecipeVoter::DELETE]);
@@ -175,12 +175,12 @@ class RecipeVoterTest extends TestCase
 
     public function testAnonymousUserCannotViewRecipe(): void
     {
-        $owner = $this->createMock(User::class);
+        $owner = $this->createStub(User::class);
 
-        $recipe = $this->createMock(Recipe::class);
+        $recipe = $this->createStub(Recipe::class);
         $recipe->method('getUser')->willReturn($owner);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn(null);
 
         $result = $this->voter->vote($token, $recipe, [RecipeVoter::VIEW]);
@@ -190,12 +190,12 @@ class RecipeVoterTest extends TestCase
 
     public function testAnonymousUserCannotEditRecipe(): void
     {
-        $owner = $this->createMock(User::class);
+        $owner = $this->createStub(User::class);
 
-        $recipe = $this->createMock(Recipe::class);
+        $recipe = $this->createStub(Recipe::class);
         $recipe->method('getUser')->willReturn($owner);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn(null);
 
         $result = $this->voter->vote($token, $recipe, [RecipeVoter::EDIT]);
@@ -205,12 +205,12 @@ class RecipeVoterTest extends TestCase
 
     public function testAnonymousUserCannotDeleteRecipe(): void
     {
-        $owner = $this->createMock(User::class);
+        $owner = $this->createStub(User::class);
 
-        $recipe = $this->createMock(Recipe::class);
+        $recipe = $this->createStub(Recipe::class);
         $recipe->method('getUser')->willReturn($owner);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn(null);
 
         $result = $this->voter->vote($token, $recipe, [RecipeVoter::DELETE]);
@@ -220,12 +220,12 @@ class RecipeVoterTest extends TestCase
 
     public function testAbstainsOnUnsupportedAttribute(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
 
-        $recipe = $this->createMock(Recipe::class);
+        $recipe = $this->createStub(Recipe::class);
         $recipe->method('getUser')->willReturn($user);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($user);
 
         $result = $this->voter->vote($token, $recipe, ['UNSUPPORTED_ATTRIBUTE']);
@@ -235,10 +235,10 @@ class RecipeVoterTest extends TestCase
 
     public function testAbstainsOnUnsupportedSubject(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
         $notARecipe = new \stdClass();
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($user);
 
         $result = $this->voter->vote($token, $notARecipe, [RecipeVoter::EDIT]);
