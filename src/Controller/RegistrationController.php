@@ -47,14 +47,16 @@ class RegistrationController extends AbstractController
         #[Autowire(service: 'limiter.registration_client')]
         RateLimiterFactory $registrationClientLimiter
     ): Response {
-        $limiter = $registrationClientLimiter->create($request->getClientIp());
-        if (false === $limiter->consume(1)->isAccepted()) {
-            throw new TooManyRequestsHttpException();
-        }
-
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $limiter = $registrationClientLimiter->create($request->getClientIp());
+            if (false === $limiter->consume(1)->isAccepted()) {
+                throw new TooManyRequestsHttpException();
+            }
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var string $plainPassword */

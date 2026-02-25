@@ -1,71 +1,70 @@
-{% extends 'base.html.twig' %}
+<turbo-frame id="modal-content">
+    <div class="relative bg-white p-8">
 
-{% block title %}Edit {{ recipe.title }} - Recipe Archive{% endblock %}
+        <button type="button" data-action="click->modal#close" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
 
-{% block body %}
-    <div class="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <a href="{{ recipe.dish ? path('app_dish_show', {'id': recipe.dish.id}) : path('app_dashboard') }}" class="text-sm text-gray-400 hover:text-gray-600 transition-colors">&larr; Back</a>
+        <h1 class="text-xl font-bold text-gray-900 mb-6">Edit Recipe</h1>
 
-        <div class="mt-6">
-            <h1 class="text-xl font-bold text-gray-900 mb-6">Edit Recipe</h1>
-
-            {{ form_start(form, {'attr': {'class': 'space-y-5'}}) }}
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="sm:col-span-2">
-                        {{ form_label(form.reference, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
-                        {{ form_widget(form.reference) }}
-                        {{ form_errors(form.reference, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
-                    </div>
-
-                    <div>
-                        {{ form_label(form.title, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
-                        {{ form_widget(form.title) }}
-                        {{ form_errors(form.title, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
-                    </div>
-
-                    <div>
-                        {{ form_label(form.author, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
-                        {{ form_widget(form.author) }}
-                        {{ form_errors(form.author, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
-                    </div>
-
-                    <div class="sm:col-span-2">
-                        {{ form_label(form.dish, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
-                        {{ form_widget(form.dish) }}
-                        {{ form_errors(form.dish, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
-                    </div>
-
-                    <div>
-                        {{ form_label(form.tags, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
-                        {{ form_widget(form.tags) }}
-                    </div>
-
-                    <div>
-                        {{ form_label(form.ingredients, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
-                        {{ form_widget(form.ingredients) }}
-                    </div>
+        {{ form_start(form, {'action': path('app_recipe_edit', {'id': recipe.id}), 'attr': {'class': 'space-y-5', 'data-turbo-frame': 'modal-content'}}) }}
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="sm:col-span-2">
+                    {{ form_label(form.reference, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+                    {{ form_widget(form.reference) }}
+                    {{ form_errors(form.reference, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
                 </div>
 
-                <div class="flex gap-3 pt-2">
-                    <button type="submit" class="px-5 py-2 text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition-colors">
-                        Save
-                    </button>
-                    <a href="{{ recipe.dish ? path('app_dish_show', {'id': recipe.dish.id}) : path('app_dashboard') }}" class="px-5 py-2 text-sm font-medium rounded-lg text-gray-700 border border-gray-300 hover:bg-gray-50 transition-colors">
-                        Cancel
-                    </a>
+                <div>
+                    {{ form_label(form.title, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+                    {{ form_widget(form.title) }}
+                    {{ form_errors(form.title, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
                 </div>
-            {{ form_end(form) }}
 
-            <div class="mt-12 pt-8 border-t border-gray-100">
-                <p class="text-sm font-medium text-gray-700 mb-3">Delete this recipe</p>
-                <p class="text-sm text-gray-500 mb-4">This will permanently remove the recipe.</p>
-                <form method="post" action="{{ path('app_recipe_delete', {'id': recipe.id}) }}" onsubmit="return confirm('Delete this recipe? This cannot be undone.');">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ recipe.id) }}">
-                    <button type="submit" class="px-4 py-2 text-sm font-medium rounded-lg text-red-600 border border-red-200 hover:bg-red-50 transition-colors">
-                        Delete recipe
-                    </button>
-                </form>
+                <div>
+                    {{ form_label(form.author, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+                    {{ form_widget(form.author) }}
+                    {{ form_errors(form.author, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
+                </div>
+
+                <div class="sm:col-span-2">
+                    {{ form_label(form.dish, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+                    {{ form_widget(form.dish) }}
+                    {{ form_errors(form.dish, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.tags, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+                    {{ form_widget(form.tags) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.ingredients, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+                    {{ form_widget(form.ingredients) }}
+                </div>
             </div>
+
+            <div class="pt-6 flex flex-col sm:flex-row-reverse gap-3 border-t border-gray-100">
+                <button type="submit" class="w-full inline-flex justify-center py-2.5 px-4 border border-transparent shadow-sm text-sm font-bold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all">
+                    Save
+                </button>
+                <button type="button" data-action="click->modal#close" class="w-full inline-flex justify-center py-2.5 px-4 border border-gray-300 shadow-sm text-sm font-semibold rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all">
+                    Cancel
+                </button>
+            </div>
+        {{ form_end(form) }}
+
+        <div class="mt-10 pt-8 border-t border-gray-100">
+            <p class="text-sm font-medium text-gray-700 mb-1">Delete this recipe</p>
+            <p class="text-sm text-gray-500 mb-4">This will permanently remove the recipe.</p>
+            <form method="post" action="{{ path('app_recipe_delete', {'id': recipe.id}) }}" onsubmit="return confirm('Delete this recipe? This cannot be undone.');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ recipe.id) }}">
+                <button type="submit" class="px-4 py-2 text-sm font-medium rounded-lg text-red-600 border border-red-200 hover:bg-red-50 transition-colors">
+                    Delete recipe
+                </button>
+            </form>
         </div>
     </div>
-{% endblock %}
+</turbo-frame>
