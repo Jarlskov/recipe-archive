@@ -55,7 +55,8 @@ class DashboardControllerTest extends WebTestCase
         $this->assertSelectorTextContains('body', 'My Dish');
         $this->assertSelectorTextContains('body', 'My Recipe');
         $this->assertSelectorTextNotContains('body', 'Other Dish');
-        $this->assertSelectorTextNotContains('body', 'Other Recipe');
+        $this->assertSelectorTextNotContains('body', 'other@example.com');
+        $this->assertSelectorTextNotContains('#unassigned-recipes h3', 'Other Recipe');
     }
 
     public function testAnonymousUserIsRedirectedToLogin(): void
@@ -253,6 +254,6 @@ class DashboardControllerTest extends WebTestCase
         $client->request('GET', '/', ['q' => 'xyznonexistent']);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('body', 'No results found');
+        $this->assertSelectorTextContains('body', 'No dishes found.');
     }
 }

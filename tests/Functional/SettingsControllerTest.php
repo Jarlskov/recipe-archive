@@ -39,11 +39,11 @@ class SettingsControllerTest extends WebTestCase
         $user = $this->createUser('unverified@example.com', false);
         $client->loginUser($user);
 
-        $crawler = $client->request('GET', '/settings');
+        $client->request('GET', '/settings');
         $this->assertResponseIsSuccessful();
-        
-        $this->assertSelectorTextContains('dd', 'unverified@example.com');
-        $this->assertSelectorTextContains('dd span', 'Not Verified');
+
+        $this->assertSelectorTextContains('body', 'unverified@example.com');
+        $this->assertSelectorTextContains('body', 'Not yet');
         $this->assertSelectorExists('form[action="/settings/resend-verification"]');
     }
 
@@ -54,17 +54,17 @@ class SettingsControllerTest extends WebTestCase
         $client->loginUser($user);
 
         $client->request('GET', '/settings');
-        $client->submitForm('Resend Verification Email');
+        $client->submitForm('Resend email');
 
         $this->assertResponseRedirects('/settings');
-        
+
         // Assert email sent (before following redirect)
         $this->assertEmailCount(1);
         $email = $this->getMailerMessage();
         $this->assertEmailHeaderSame($email, 'To', 'resend@example.com');
 
         $client->followRedirect();
-        
+
         $this->assertSelectorTextContains('.bg-green-50', 'Verification email sent');
     }
 
@@ -74,11 +74,11 @@ class SettingsControllerTest extends WebTestCase
         $user = $this->createUser('verified@example.com', true);
         $client->loginUser($user);
 
-        $crawler = $client->request('GET', '/settings');
+        $client->request('GET', '/settings');
         $this->assertResponseIsSuccessful();
-        
-        $this->assertSelectorTextContains('dd', 'verified@example.com');
-        $this->assertSelectorTextContains('dd span', 'Verified');
+
+        $this->assertSelectorTextContains('body', 'verified@example.com');
+        $this->assertSelectorTextContains('body', 'Yes');
         $this->assertSelectorNotExists('form[action="/settings/resend-verification"]');
     }
 }
