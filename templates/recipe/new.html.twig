@@ -58,11 +58,11 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         {{ form_label(form.tags, null, {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 mb-2'}}) }}
-                        {{ form_widget(form.tags) }}
+                        {{ form_widget(form.tags, {'attr': {'data-recipe-creation-target': 'tags'}}) }}
                     </div>
                     <div>
                         {{ form_label(form.ingredients, null, {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 mb-2'}}) }}
-                        {{ form_widget(form.ingredients) }}
+                        {{ form_widget(form.ingredients, {'attr': {'data-recipe-creation-target': 'ingredients'}}) }}
                     </div>
                 </div>
 
