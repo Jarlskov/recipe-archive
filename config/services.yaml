@@ -23,3 +23,10 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Service\RecipeCategorizerInterface:
+        alias: App\Service\GeminiRecipeCategorizer
+
+    App\Service\GeminiRecipeCategorizer:
+        arguments:
+            $geminiApiKey: '%env(string:default::GEMINI_API_KEY)%'

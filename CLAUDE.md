@@ -44,6 +44,8 @@ php bin/console tailwind:build --minify
 php bin/console asset-map:compile
 ```
 
+**Important**: If compiled asset files exist in `public/assets/`, Symfony serves those instead of the source files in `assets/` — even in dev mode. After editing a JS file, delete the corresponding compiled file from `public/assets/controllers/` so the dev server picks up the changes immediately, or recompile with `asset-map:compile`. Stale compiled files are a common cause of JS changes appearing to have no effect.
+
 ### Testing
 ```bash
 # Run all tests

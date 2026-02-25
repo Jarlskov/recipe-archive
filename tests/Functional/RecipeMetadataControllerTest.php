@@ -13,8 +13,7 @@ class RecipeMetadataControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('GET', '/recipe/metadata');
-        
-        // Should redirect to login
+
         $this->assertResponseRedirects('/login');
     }
 
@@ -51,12 +50,10 @@ class RecipeMetadataControllerTest extends WebTestCase
 
         $client->loginUser($user);
 
-        // Test with invalid URL
         $client->request('GET', '/recipe/metadata', ['url' => 'not-a-url']);
         $this->assertResponseStatusCodeSame(400);
 
-        $response = $client->getResponse();
-        $data = json_decode($response->getContent(), true);
+        $data = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals('Invalid URL', $data['error']);
     }
 
@@ -74,14 +71,10 @@ class RecipeMetadataControllerTest extends WebTestCase
 
         $client->loginUser($user);
 
-        // Try to fetch from a definitely non-existent domain
         $client->request('GET', '/recipe/metadata', ['url' => 'https://this-domain-definitely-does-not-exist-12345.com']);
 
-        // Should return 500 with error message
         $this->assertResponseStatusCodeSame(500);
-        $response = $client->getResponse();
-        $data = json_decode($response->getContent(), true);
-
+        $data = json_decode($client->getResponse()->getContent(), true);
         $this->assertArrayHasKey('error', $data);
         $this->assertEquals('Could not fetch metadata', $data['error']);
     }
