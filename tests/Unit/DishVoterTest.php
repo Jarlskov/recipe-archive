@@ -22,7 +22,7 @@ class DishVoterTest extends TestCase
 
     public function testSupportsDishEditAttribute(): void
     {
-        $dish = $this->createMock(Dish::class);
+        $dish = $this->createStub(Dish::class);
 
         $reflection = new \ReflectionClass($this->voter);
         $method = $reflection->getMethod('supports');
@@ -34,7 +34,7 @@ class DishVoterTest extends TestCase
 
     public function testSupportsDishViewAttribute(): void
     {
-        $dish = $this->createMock(Dish::class);
+        $dish = $this->createStub(Dish::class);
 
         $reflection = new \ReflectionClass($this->voter);
         $method = $reflection->getMethod('supports');
@@ -46,7 +46,7 @@ class DishVoterTest extends TestCase
 
     public function testSupportsDishDeleteAttribute(): void
     {
-        $dish = $this->createMock(Dish::class);
+        $dish = $this->createStub(Dish::class);
 
         $reflection = new \ReflectionClass($this->voter);
         $method = $reflection->getMethod('supports');
@@ -58,7 +58,7 @@ class DishVoterTest extends TestCase
 
     public function testDoesNotSupportInvalidAttribute(): void
     {
-        $dish = $this->createMock(Dish::class);
+        $dish = $this->createStub(Dish::class);
 
         $reflection = new \ReflectionClass($this->voter);
         $method = $reflection->getMethod('supports');
@@ -82,12 +82,12 @@ class DishVoterTest extends TestCase
 
     public function testOwnerCanViewDish(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
 
-        $dish = $this->createMock(Dish::class);
+        $dish = $this->createStub(Dish::class);
         $dish->method('getUser')->willReturn($user);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($user);
 
         $result = $this->voter->vote($token, $dish, [DishVoter::VIEW]);
@@ -97,12 +97,12 @@ class DishVoterTest extends TestCase
 
     public function testOwnerCanEditDish(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
 
-        $dish = $this->createMock(Dish::class);
+        $dish = $this->createStub(Dish::class);
         $dish->method('getUser')->willReturn($user);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($user);
 
         $result = $this->voter->vote($token, $dish, [DishVoter::EDIT]);
@@ -112,12 +112,12 @@ class DishVoterTest extends TestCase
 
     public function testOwnerCanDeleteDish(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
 
-        $dish = $this->createMock(Dish::class);
+        $dish = $this->createStub(Dish::class);
         $dish->method('getUser')->willReturn($user);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($user);
 
         $result = $this->voter->vote($token, $dish, [DishVoter::DELETE]);
@@ -127,13 +127,13 @@ class DishVoterTest extends TestCase
 
     public function testNonOwnerCannotViewDish(): void
     {
-        $owner = $this->createMock(User::class);
-        $otherUser = $this->createMock(User::class);
+        $owner = $this->createStub(User::class);
+        $otherUser = $this->createStub(User::class);
 
-        $dish = $this->createMock(Dish::class);
+        $dish = $this->createStub(Dish::class);
         $dish->method('getUser')->willReturn($owner);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($otherUser);
 
         $result = $this->voter->vote($token, $dish, [DishVoter::VIEW]);
@@ -143,13 +143,13 @@ class DishVoterTest extends TestCase
 
     public function testNonOwnerCannotEditDish(): void
     {
-        $owner = $this->createMock(User::class);
-        $otherUser = $this->createMock(User::class);
+        $owner = $this->createStub(User::class);
+        $otherUser = $this->createStub(User::class);
 
-        $dish = $this->createMock(Dish::class);
+        $dish = $this->createStub(Dish::class);
         $dish->method('getUser')->willReturn($owner);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($otherUser);
 
         $result = $this->voter->vote($token, $dish, [DishVoter::EDIT]);
@@ -159,13 +159,13 @@ class DishVoterTest extends TestCase
 
     public function testNonOwnerCannotDeleteDish(): void
     {
-        $owner = $this->createMock(User::class);
-        $otherUser = $this->createMock(User::class);
+        $owner = $this->createStub(User::class);
+        $otherUser = $this->createStub(User::class);
 
-        $dish = $this->createMock(Dish::class);
+        $dish = $this->createStub(Dish::class);
         $dish->method('getUser')->willReturn($owner);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($otherUser);
 
         $result = $this->voter->vote($token, $dish, [DishVoter::DELETE]);
@@ -175,12 +175,12 @@ class DishVoterTest extends TestCase
 
     public function testAnonymousUserCannotViewDish(): void
     {
-        $owner = $this->createMock(User::class);
+        $owner = $this->createStub(User::class);
 
-        $dish = $this->createMock(Dish::class);
+        $dish = $this->createStub(Dish::class);
         $dish->method('getUser')->willReturn($owner);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn(null);
 
         $result = $this->voter->vote($token, $dish, [DishVoter::VIEW]);
@@ -190,12 +190,12 @@ class DishVoterTest extends TestCase
 
     public function testAnonymousUserCannotEditDish(): void
     {
-        $owner = $this->createMock(User::class);
+        $owner = $this->createStub(User::class);
 
-        $dish = $this->createMock(Dish::class);
+        $dish = $this->createStub(Dish::class);
         $dish->method('getUser')->willReturn($owner);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn(null);
 
         $result = $this->voter->vote($token, $dish, [DishVoter::EDIT]);
@@ -205,12 +205,12 @@ class DishVoterTest extends TestCase
 
     public function testAnonymousUserCannotDeleteDish(): void
     {
-        $owner = $this->createMock(User::class);
+        $owner = $this->createStub(User::class);
 
-        $dish = $this->createMock(Dish::class);
+        $dish = $this->createStub(Dish::class);
         $dish->method('getUser')->willReturn($owner);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn(null);
 
         $result = $this->voter->vote($token, $dish, [DishVoter::DELETE]);
@@ -220,12 +220,12 @@ class DishVoterTest extends TestCase
 
     public function testAbstainsOnUnsupportedAttribute(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
 
-        $dish = $this->createMock(Dish::class);
+        $dish = $this->createStub(Dish::class);
         $dish->method('getUser')->willReturn($user);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($user);
 
         $result = $this->voter->vote($token, $dish, ['UNSUPPORTED_ATTRIBUTE']);
@@ -235,10 +235,10 @@ class DishVoterTest extends TestCase
 
     public function testAbstainsOnUnsupportedSubject(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
         $notADish = new \stdClass();
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($user);
 
         $result = $this->voter->vote($token, $notADish, [DishVoter::EDIT]);
