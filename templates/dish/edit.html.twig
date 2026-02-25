@@ -3,58 +3,36 @@
 {% block title %}Edit {{ dish.name }} - Recipe Archive{% endblock %}
 
 {% block body %}
-    <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <!-- Breadcrumbs -->
-        <nav class="flex mb-8" aria-label="Breadcrumb">
-            <ol class="flex items-center space-x-2">
-                <li>
-                    <a href="{{ path('app_dashboard') }}" class="text-sm font-medium text-gray-500 hover:text-indigo-600 transition-colors">Dashboard</a>
-                </li>
-                <li>
-                    <div class="flex items-center">
-                        <svg class="flex-shrink-0 h-5 w-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                        </svg>
-                        <a href="{{ path('app_dish_show', {'id': dish.id}) }}" class="ml-2 text-sm font-medium text-gray-500 hover:text-indigo-600 transition-colors">{{ dish.name }}</a>
-                    </div>
-                </li>
-                <li>
-                    <div class="flex items-center">
-                        <svg class="flex-shrink-0 h-5 w-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                        </svg>
-                        <span class="ml-2 text-sm font-bold text-gray-900">Edit</span>
-                    </div>
-                </li>
-            </ol>
-        </nav>
+    <div class="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <a href="{{ path('app_dish_show', {'id': dish.id}) }}" class="text-sm text-gray-400 hover:text-gray-600 transition-colors">&larr; Back</a>
 
-        <div class="max-w-lg mx-auto bg-white shadow-xl rounded-2xl p-8 border border-gray-100">
-            <h1 class="text-2xl font-extrabold text-gray-900 mb-6 text-center">Edit Dish</h1>
-            
-            {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+        <div class="mt-6 max-w-lg">
+            <h1 class="text-xl font-bold text-gray-900 mb-6">Edit Dish</h1>
+
+            {{ form_start(form, {'attr': {'class': 'space-y-5'}}) }}
                 <div>
-                    {{ form_label(form.name, null, {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 mb-2'}}) }}
+                    {{ form_label(form.name, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
                     {{ form_widget(form.name) }}
-                    {{ form_errors(form.name, {'attr': {'class': 'mt-2 text-sm text-red-600 font-medium'}}) }}
+                    {{ form_errors(form.name, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
                 </div>
 
-                <div class="pt-6 flex flex-col sm:flex-row-reverse gap-3">
-                    <button type="submit" class="w-full inline-flex justify-center py-2.5 px-4 border border-transparent shadow-sm text-sm font-bold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all">
-                        Save Changes
+                <div class="flex gap-3">
+                    <button type="submit" class="px-5 py-2 text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition-colors">
+                        Save
                     </button>
-                    <a href="{{ path('app_dish_show', {'id': dish.id}) }}" class="w-full inline-flex justify-center py-2.5 px-4 border border-gray-300 shadow-sm text-sm font-semibold rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all">
+                    <a href="{{ path('app_dish_show', {'id': dish.id}) }}" class="px-5 py-2 text-sm font-medium rounded-lg text-gray-700 border border-gray-300 hover:bg-gray-50 transition-colors">
                         Cancel
                     </a>
                 </div>
             {{ form_end(form) }}
 
-            <div class="mt-12 pt-10 border-t border-red-50">
-                <h3 class="text-lg font-bold text-red-900 mb-4">Danger Zone</h3>
-                <form method="post" action="{{ path('app_dish_delete', {'id': dish.id}) }}" onsubmit="return confirm('Are you sure you want to delete this dish and all its recipes? This action cannot be undone.');">
+            <div class="mt-12 pt-8 border-t border-gray-100">
+                <p class="text-sm font-medium text-gray-700 mb-3">Delete this dish</p>
+                <p class="text-sm text-gray-500 mb-4">This will permanently remove the dish and all its recipes.</p>
+                <form method="post" action="{{ path('app_dish_delete', {'id': dish.id}) }}" onsubmit="return confirm('Delete this dish and all its recipes? This cannot be undone.');">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ dish.id) }}">
-                    <button type="submit" class="w-full inline-flex justify-center py-2.5 px-4 border border-transparent shadow-sm text-sm font-bold rounded-lg text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all">
-                        Delete Dish
+                    <button type="submit" class="px-4 py-2 text-sm font-medium rounded-lg text-red-600 border border-red-200 hover:bg-red-50 transition-colors">
+                        Delete dish
                     </button>
                 </form>
             </div>

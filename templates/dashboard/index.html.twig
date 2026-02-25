@@ -1,159 +1,110 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Dashboard - Recipe Archive{% endblock %}
+{% block title %}My Recipes{% endblock %}
 
 {% block body %}
-    <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <!-- Advanced Search & Filter -->
-        <div class="mb-12 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-            {{ form_start(searchForm, {'attr': {'class': 'space-y-4'}}) }}
+    <div class="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <!-- Search & Filter -->
+        <div class="mb-8">
+            {{ form_start(searchForm, {'attr': {'class': 'space-y-3'}}) }}
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                     </div>
                     {{ form_widget(searchForm.q) }}
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-3">
                     <div>
-                        {{ form_label(searchForm.tags, null, {'label_attr': {'class': 'block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1'}}) }}
+                        {{ form_label(searchForm.tags, null, {'label_attr': {'class': 'block text-xs text-gray-500 mb-1'}}) }}
                         {{ form_widget(searchForm.tags) }}
                     </div>
                     <div>
-                        {{ form_label(searchForm.ingredients, null, {'label_attr': {'class': 'block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1'}}) }}
+                        {{ form_label(searchForm.ingredients, null, {'label_attr': {'class': 'block text-xs text-gray-500 mb-1'}}) }}
                         {{ form_widget(searchForm.ingredients) }}
                     </div>
                 </div>
 
-                <div class="flex justify-between items-center pt-2">
-                    <div class="flex items-center space-x-2">
-                        {% if searchQuery or activeTags|length > 0 or activeIngredients|length > 0 %}
-                            <a href="{{ path('app_dashboard') }}" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">Clear all filters</a>
-                        {% endif %}
-                    </div>
-                    <button type="submit" class="inline-flex items-center px-6 py-2 border border-transparent text-sm font-bold rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all shadow-sm">
-                        Apply Filters
+                <div class="flex justify-between items-center">
+                    {% if searchQuery or activeTags|length > 0 or activeIngredients|length > 0 %}
+                        <a href="{{ path('app_dashboard') }}" class="text-sm text-gray-500 hover:text-gray-700">Clear filters</a>
+                    {% else %}
+                        <span></span>
+                    {% endif %}
+                    <button type="submit" class="px-4 py-1.5 text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition-colors">
+                        Search
                     </button>
                 </div>
             {{ form_end(searchForm) }}
         </div>
 
-        <!-- Stats Row -->
-        <div class="grid grid-cols-2 gap-4 sm:gap-6 mb-8">
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Dishes</p>
-                <p class="text-3xl font-bold text-indigo-600 mt-1">{{ dishes|length }}</p>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Recipes</p>
-                <p class="text-3xl font-bold text-green-600 mt-1">{{ recipeCount }}</p>
-            </div>
-        </div>
-
-        <!-- Dishes Grid Header -->
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 border-b border-gray-100 pb-4">
-            <h2 class="text-2xl font-bold text-gray-900">Your Dishes</h2>
-        </div>
+        <!-- Dishes -->
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Your Dishes</h2>
 
         {% if dishes|length > 0 %}
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="space-y-2 mb-10">
                 {% for dish in dishes %}
-                    <a href="{{ path('app_dish_show', {'id': dish.id}) }}" class="block bg-white overflow-hidden shadow-sm rounded-xl border border-gray-100 hover:shadow-md hover:border-indigo-200 transition-all group">
-                        <div class="p-6">
-                            <h3 class="text-lg font-bold text-gray-900 mb-1 group-hover:text-indigo-600 transition-colors">{{ dish.name }}</h3>
-                            <p class="text-sm text-gray-500 mb-4">
-                                {{ dish.recipes|length }} {{ dish.recipes|length == 1 ? 'recipe' : 'recipes' }}
-                            </p>
-                            
-                            <div class="pt-4 border-t border-gray-50 flex justify-between items-center">
-                                <span class="text-xs text-gray-400 italic">Created {{ dish.createdAt|date('M d, Y') }}</span>
-                                <span class="text-sm font-semibold text-indigo-600 group-hover:translate-x-1 transition-transform inline-flex items-center">
-                                    View Recipes &rarr;
-                                </span>
-                            </div>
-                        </div>
+                    <a href="{{ path('app_dish_show', {'id': dish.id}) }}" class="flex justify-between items-center bg-white px-4 py-3 rounded-xl border border-gray-100 hover:border-indigo-200 hover:shadow-sm transition-all group">
+                        <span class="font-medium text-gray-900 group-hover:text-indigo-600 transition-colors">{{ dish.name }}</span>
+                        <span class="text-sm text-gray-400">{{ dish.recipes|length }} {{ dish.recipes|length == 1 ? 'recipe' : 'recipes' }} &rarr;</span>
                     </a>
                 {% endfor %}
             </div>
         {% else %}
             {% if searchQuery or activeTags|length > 0 or activeIngredients|length > 0 %}
-                <div class="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100">
-                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">No results found</h3>
-                    <p class="mt-1 text-sm text-gray-500">Try adjusting your filters.</p>
-                    <div class="mt-6">
-                        <a href="{{ path('app_dashboard') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                            Clear all filters
-                        </a>
-                    </div>
+                <div class="text-center py-10 mb-10">
+                    <p class="text-gray-500">No dishes found.</p>
+                    <a href="{{ path('app_dashboard') }}" class="mt-2 inline-block text-sm text-indigo-600 hover:text-indigo-800">Clear filters</a>
                 </div>
             {% elseif standaloneRecipes|length == 0 %}
-                <div class="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100">
-                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">No dishes or recipes</h3>
-                    <p class="mt-1 text-sm text-gray-500">Get started by creating your first dish or recipe.</p>
+                <div class="text-center py-16 bg-white rounded-xl border border-dashed border-gray-200 mb-10">
+                    <p class="text-gray-500 mb-1">Nothing here yet.</p>
+                    <p class="text-sm text-gray-400">Tap the + button to add your first recipe.</p>
                 </div>
             {% endif %}
         {% endif %}
 
         {% if standaloneRecipes|length > 0 %}
-            <div class="mt-12" id="unassigned-recipes">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b border-gray-100 pb-4">Unassigned Recipes</h2>
-                <div class="space-y-4">
+            <div id="unassigned-recipes">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Other Recipes</h2>
+                <div class="space-y-2">
                     {% for recipe in standaloneRecipes %}
-                        <div class="bg-white shadow-sm rounded-xl border border-gray-100 p-5 hover:shadow-md transition-shadow">
+                        <div class="bg-white rounded-xl border border-gray-100 px-4 py-3 hover:shadow-sm transition-shadow">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <h3 class="font-bold text-gray-900">{{ recipe.title }}</h3>
-                                    <p class="text-sm text-gray-500 mb-2">{{ recipe.author }}</p>
-                                    
-                                    <div class="flex items-center text-xs">
-                                        {% if recipe.reference starts with 'http' %}
-                                            <a href="{{ recipe.reference }}" target="_blank" class="flex items-center text-indigo-600 hover:underline">
-                                                <svg class="mr-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                                                Visit Website
-                                            </a>
-                                        {% else %}
-                                            <span class="flex items-center text-gray-400">
-                                                <svg class="mr-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-                                                {{ recipe.reference }}
-                                            </span>
-                                        {% endif %}
-                                    </div>
+                                    <h3 class="font-medium text-gray-900">{{ recipe.title }}</h3>
+                                    <p class="text-sm text-gray-500">{{ recipe.author }}</p>
                                 </div>
-                                <div class="flex items-center space-x-3">
-                                    <a href="{{ path('app_recipe_edit', {'id': recipe.id}) }}" class="text-gray-400 hover:text-indigo-600 transition-colors">
-                                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <div class="flex items-center space-x-3 ml-4 flex-shrink-0">
+                                    {% if recipe.reference starts with 'http' %}
+                                        <a href="{{ recipe.reference }}" target="_blank" class="text-sm text-indigo-600 hover:underline">Open &rarr;</a>
+                                    {% else %}
+                                        <span class="text-sm text-gray-400">{{ recipe.reference }}</span>
+                                    {% endif %}
+                                    <a href="{{ path('app_recipe_edit', {'id': recipe.id}) }}" class="text-gray-300 hover:text-gray-500 transition-colors" aria-label="Edit">
+                                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                         </svg>
                                     </a>
-                                    <span class="text-xs text-gray-400 italic hidden sm:block">Added {{ recipe.createdAt|date('M d, Y') }}</span>
                                 </div>
                             </div>
 
-                            <div class="mt-4 flex flex-wrap gap-2">
-                                {% for tag in recipe.tags %}
-                                    <a href="{{ path('app_dashboard', {'tags': tag.id}) }}" class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-100 transition-colors">
-                                        #{{ tag.name }}
-                                    </a>
-                                {% endfor %}
-                                
-                                {% if recipe.ingredients|length > 0 %}
-                                    <div class="w-full sm:w-auto h-px sm:h-auto sm:border-l sm:border-gray-200 mx-1"></div>
-                                {% endif %}
-
-                                {% for ingredient in recipe.ingredients %}
-                                    <a href="{{ path('app_dashboard', {'ingredients': ingredient.id}) }}" class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-50 text-green-700 hover:bg-green-100 border border-green-100 transition-colors">
-                                        {{ ingredient.name }}
-                                    </a>
-                                {% endfor %}
-                            </div>
+                            {% if recipe.tags|length > 0 or recipe.ingredients|length > 0 %}
+                                <div class="mt-2 flex flex-wrap gap-1.5">
+                                    {% for tag in recipe.tags %}
+                                        <a href="{{ path('app_dashboard', {'tags': tag.id}) }}" class="px-2 py-0.5 rounded-full text-xs bg-purple-50 text-purple-700 hover:bg-purple-100 transition-colors">
+                                            #{{ tag.name }}
+                                        </a>
+                                    {% endfor %}
+                                    {% for ingredient in recipe.ingredients %}
+                                        <a href="{{ path('app_dashboard', {'ingredients': ingredient.id}) }}" class="px-2 py-0.5 rounded-full text-xs bg-green-50 text-green-700 hover:bg-green-100 transition-colors">
+                                            {{ ingredient.name }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>
